@@ -15,12 +15,27 @@ if User.query.filter_by(username="uname").first()==None: #prevents creating anot
 else:
     pass
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/')
+def home():
+    return render_template("homepage.html")
+@app.route('/admin')
+def admin():
+    return render_template("frst_admLand.html")
+@app.route('/v_you')
+def v_you():
+    return render_template("viewer_land.html")
+
+
+@app.route('/loli',methods=['POST','GET'])
 def u_type():
     if request.method == 'POST':
         try:
+            print "i am post"
+            print request.form['id_number']
             eye_D = User.query.filter_by(id=request.form['id_number']).first()
-
+            print "what am i?"
+            print eye_D.id
+            print request.form['id_number']
             if eye_D.id == request.form['id_number']:
                 msg = 'you are Admin'
                 return render_template('frst_admLand.html', msg=msg)
@@ -74,8 +89,9 @@ def register():
 
 @app.route('/proceed',methods=['GET','POST'])
 def proceed():
+    eye_D = viewer.query.filter_by(studid=request.form['id_number']).first()
 
-    msg="page to be view"
+    msg=eye_D.firstname
     return render_template('viewing_page.html',msg=msg)
 
 @app.route('/logz')
@@ -87,13 +103,21 @@ def add_dis():
     print "im performed"
 
     if request.method == "POST":
-        print "i am post"
-        tob_add=viewer(request.form['id'],request.form['first'],request.form['mid'],request.form['last'],request.form['gen'],request.form['crs'],request.form['lvl'])
-        db.session.add(tob_add)
-        db.session.commit()
-        print "success"
-        msg="successfully added"
-        return render_template("viewer_reg.html",msg=msg)
+        try:
+            eye_D = viewer.query.filter_by(studid=request.form['id']).first()
+            if eye_D.studid == request.form['id']:
+                print "satisfied"
+                msg = "You are already registered"
+                return render_template("viewer_reg.html", msg=msg)
+        except:
+            print "i am post"
+            tob_add=viewer(request.form['id'],request.form['first'],request.form['mid'],request.form['last'],request.form['gen'],request.form['crs'],request.form['lvl'])
+            db.session.add(tob_add)
+            db.session.commit()
+            print "success"
+            msg="successfully added"
+            return render_template("viewer_reg.html",msg=msg)
+
     else:
         msg = "i am get"
         return render_template('viewer_reg.html',msg=msg)
