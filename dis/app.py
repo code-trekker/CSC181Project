@@ -67,18 +67,36 @@ def register():
         tobe_add = User(request.form['id'], request.form['username'], request.form['password'])
         db.session.add(tobe_add)
         db.session.commit()
+        print "success"
         msg="added succesfully"
         return render_template('admin_land.html',msg=msg)
     return render_template('adm_reg.html',form=form)
 
-@app.route('/proceed')
+@app.route('/proceed',methods=['GET','POST'])
 def proceed():
+
     msg="page to be view"
     return render_template('viewing_page.html',msg=msg)
 
-@app.route('/add_dis')
+@app.route('/logz')
+def logz():
+    return render_template("logz.html")
+
+@app.route('/add_dis',methods=['GET','POST'])
 def add_dis():
-    return render_template('viewer_reg.html')
+    print "im performed"
+
+    if request.method == "POST":
+        print "i am post"
+        tob_add=viewer(request.form['id'],request.form['first'],request.form['mid'],request.form['last'],request.form['gen'],request.form['crs'],request.form['lvl'])
+        db.session.add(tob_add)
+        db.session.commit()
+        print "success"
+        msg="successfully added"
+        return render_template("viewer_reg.html",msg=msg)
+    else:
+        msg = "i am get"
+        return render_template('viewer_reg.html',msg=msg)
 
 if __name__ == '__main__':
     app.run()

@@ -42,8 +42,22 @@ class User(db.Model):
 
 class viewer(db.Model):
     __tablename__= "viewer"
-    id = db.Column(db.String(9), nullable=False, primary_key=True)
+    studid = db.Column(db.String(12), nullable=False, primary_key=True)
+    firstname = db.Column(db.String(20), nullable=False)
+    middlename = db.Column(db.String(20), nullable=False)
+    lastname = db.Column(db.String(20), nullable=False)
+    gender= db.Column(db.String(2), nullable=False)
+    course=db.Column(db.String(50), nullable=False)
+    year =  db.Column(db.String(20), nullable=False)
 
+    def __init__(self,studid,firstname,middlename,lastnbame,gender,course,year):
+        self.studid=studid
+        self.firstname=firstname
+        self.middlename=middlename
+        self.lastname=lastnbame
+        self.gender=gender
+        self.course=course
+        self.year=year
 
 
 

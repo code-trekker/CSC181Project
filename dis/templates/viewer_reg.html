@@ -5,19 +5,28 @@
 <body>
 
 <center>
-    <form>
+    <form action="{{url_for('add_dis')}}" method = "post">
         <h1>Be a member</h1>
-        Firstname
-        <input type="text" placeholder="First" name="first" required><br>
-        Lastname
-        <input type="text" placeholder="Last" name="last" required><br>
         ID number
         <input type="text" placeholder="ID" name="id" required><br>
+        First name
+        <input type="text" placeholder="First" name="first" required><br>
+        Middle name
+        <input type="text" placeholder="Middle" name="mid" required><br>
+        Last name
+        <input type="text" placeholder="Last" name="last" required><br>
+        Gender
+        <input type="text" placeholder="M or F" name="gen" required><br>
         Course
         <input type="text" placeholder="Course" name="crs" required><br>
-        <input class="btn btn-default" type="submit">
+        Yeaar Level
+        <input type="text" placeholder="1,2,3 or 4" name="lvl" required><br>
+        <input class="btn btn-default" type="submit"><br>
 
     </form>
+
+    <h2>{{msg}}</h2>
+    <button onclick="window.location.href='/proceed'">proceed</button>
     <button onclick="window.location.href='/'">Cancel</button>
 </center>
 </body>
