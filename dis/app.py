@@ -1,0 +1,126 @@
+
+from login import *
+
+app = Flask(__name__)
+app.debug=True
+createdb()
+createTables()
+
+def createAdmin():
+    db.session.add(User(id="2013-5254",username="uname",passwd="curlytops"))
+    db.session.commit()
+
+if User.query.filter_by(username="uname").first()==None: #prevents creating another admin user
+    createAdmin()
+else:
+    pass
+
+@app.route('/')
+def home():
+    return render_template("homepage.html")
+@app.route('/admin')
+def admin():
+    return render_template("frst_admLand.html")
+@app.route('/v_you')
+def v_you():
+    return render_template("viewer_land.html")
+
+
+@app.route('/loli',methods=['POST','GET'])
+def u_type():
+    if request.method == 'POST':
+        try:
+            print "i am post"
+            print request.form['id_number']
+            eye_D = User.query.filter_by(id=request.form['id_number']).first()
+            print "what am i?"
+            print eye_D.id
+            print request.form['id_number']
+            if eye_D.id == request.form['id_number']:
+                msg = 'you are Admin'
+                return render_template('frst_admLand.html', msg=msg)
+            else:
+                msg='you are Viewr'
+                return render_template('viewer_land.html', msg=msg)
+        except:
+            msg ="you're a viewer"
+            return render_template('viewer_land.html',msg=msg)
+    return render_template('loginpage.html')
+
+
+@app.route('/login',methods=['POST','GET'])
+def log_in():
+    if request.method == 'POST':
+        try:
+
+            req = request.form['username']
+            print req
+            uname = User.query.filter_by(username=req).first()
+            print uname.username
+            if uname.username == req and check_password_hash(uname.passwd, request.form['password']):
+                msg = "SUCCESS"
+                return render_template("admin_land.html", msg=msg)
+            else:
+                msg = 'wrong username or password'
+                return render_template("admLogin.html", msg=msg)
+        except:
+            msg = 'wrong username or password'
+            return render_template("admLogin.html", msg=msg)
+
+    return render_template('admLogin.html')
+
+
+
+
+@app.route('/register',methods=['GET','POST'])
+def register():
+    form=request.form
+    if request.method =='POST':
+
+        print request.form['username']
+        print request.form['password']
+        tobe_add = User(request.form['id'], request.form['username'], request.form['password'])
+        db.session.add(tobe_add)
+        db.session.commit()
+        print "success"
+        msg="added succesfully"
+        return render_template('admin_land.html',msg=msg)
+    return render_template('adm_reg.html',form=form)
+
+@app.route('/proceed',methods=['GET','POST'])
+def proceed():
+    eye_D = viewer.query.filter_by(studid=request.form['id_number']).first()
+
+    msg=eye_D.firstname
+    return render_template('viewing_page.html',msg=msg)
+
+@app.route('/logz')
+def logz():
+    return render_template("logz.html")
+
+@app.route('/add_dis',methods=['GET','POST'])
+def add_dis():
+    print "im performed"
+
+    if request.method == "POST":
+        try:
+            eye_D = viewer.query.filter_by(studid=request.form['id']).first()
+            if eye_D.studid == request.form['id']:
+                print "satisfied"
+                msg = "You are already registered"
+                return render_template("viewer_reg.html", msg=msg)
+        except:
+            print "i am post"
+            tob_add=viewer(request.form['id'],request.form['first'],request.form['mid'],request.form['last'],request.form['gen'],request.form['crs'],request.form['lvl'])
+            db.session.add(tob_add)
+            db.session.commit()
+            print "success"
+            msg="successfully added"
+            return render_template("viewer_reg.html",msg=msg)
+
+    else:
+        msg = "i am get"
+        return render_template('viewer_reg.html',msg=msg)
+
+if __name__ == '__main__':
+    app.run()
