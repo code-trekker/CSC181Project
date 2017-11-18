@@ -8,7 +8,7 @@ def createAdmin(): #creates admin user
     db.session.add(User(userid = 'scsadmin', password=generate_password_hash('wolveswolves'), orgCode='SCS' ))
     db.session.commit()
 
-if User.query.filter_by(userid='scsadmin').first()==None: #prevents creating another admin user (temporary)
+if User.query.filter_by(userid='scsadmin').first()==None: #temporary
     createAdmin()
 else:
     pass
