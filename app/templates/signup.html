@@ -13,11 +13,12 @@ Member Sign-up
 {% block content %}
     {% with msg = get_flashed_messages() %}
     <h1>Member Registration</h1>
+        <h3>{{ msgs }}</h3>
     <div class="input-group">
     <form class="form form-horizontal" action="{{ url_for('viewreg')}}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
-        {{ wtf.form_errors(form, hiddens="only") }}
+        {{ form.csrf_token }}
         {{ wtf.form_field(form.memberid, placeholder='Enter your ID without dash, e.g., 20150001') }}
         {{ wtf.form_field(form.fname, placeholder='Enter first name') }}
         {{ wtf.form_field(form.mname, placeholder='Enter middle name') }}
@@ -29,5 +30,8 @@ Member Sign-up
     </form>
     </div>
     <a href="/empty">Already registered? Click here</a>
+    <div class="adminlink">
+    <a href="/admin">Admins log in here</a>
+    </div>
     {% endwith %}
 {% endblock %}

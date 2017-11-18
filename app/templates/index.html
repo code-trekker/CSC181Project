@@ -10,13 +10,12 @@ Login
 {% endblock %}
 
 {% block content %}
-{% with msg = get_flashed_messages() %}
 <div class="input-group">
 <h1>Sign In</h1>
     <form class="form form-horizontal" action="{{ url_for('login')}}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
-        {{ wtf.form_errors(form, hiddens="only") }}
+        {{ form.csrf_token }}
         {{ wtf.form_field(form.userid) }}
         {{ wtf.form_field(form.password) }}
     </dl>
@@ -24,7 +23,7 @@ Login
     </form>
 
 </div>
-    <a href="/viewreg"><i class="glyphicon glyphicon-alert"> Not an admin? Click here</i></a>
-{% endwith %}
+    <a href="/"><i class="glyphicon glyphicon-alert"> Not an admin? Click here</i></a>
+
 {% endblock %}
 
