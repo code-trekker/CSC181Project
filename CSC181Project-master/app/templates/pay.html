@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pay</title>
+</head>
+<body>
+    <form action="{{url_for('pay')}}" method="post">
+        <input type="text" name = "cname" placeholder="Enter collection Name" required>
+        <input type="text" name = "studid" placeholder="Enter id.no." required>
+        <input type="text" name = "date" placeholder="mm/dd/yy" required>
+        <input type="submit">
+    </form>
+</body>
+</html>

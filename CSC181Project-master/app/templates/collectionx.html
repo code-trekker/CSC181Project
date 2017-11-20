@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>collection</title>
+</head>
+<body>
+
+<h2>Collections</h2>
+{{msg}}
+<form action="{{url_for('cre_tab')}}" method = "post">
+    <select name= type>
+        <option value="assesment">Assesment</option>
+        <option value="T-shirt">T-shirt</option>
+        <option value="extra-kuri-kuri">extra-kuri-kuri</option>
+        <option value="others...">others...</option>
+    </select>
+    <br><br>
+    <input type="text" name = "cname" placeholder="Enter collection Name" required>
+    <input type="text" name = "fee" placeholder="Enter amount" required>
+    <input type="submit">
+</form>
+<button onclick="window.location.href='/admincollection'">Cancel</button>
+
+</body>
+</html>
