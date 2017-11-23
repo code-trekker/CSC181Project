@@ -1,10 +1,10 @@
-.input-budget {
+.input-event {
     margin-left: 43%;
     margin-top: 2%;
 }
 
 input[type=submit]{
-    margin-left: 5.8%;
+    margin-left: 4.5%;
 }
 
 input[type=text]{
@@ -40,13 +40,31 @@ h3 {
     font-style: italic;
 }
 
-select.form-control {
+#eventDate {
     width: 27%;
 }
 
-.adminlink {
-    font-size: 0.5em;
+.container-fluid {
+    position: relative;
+    width: 20%;
+    margin-top: 30px;
+    margin-left: 40%;
+}
+
+.panel-transparent {
+	background: none;
+}
+
+.panel-transparent .panel-heading{
+    background: rgba(122, 130, 136, 0.2)!important;
+}
+
+.panel-transparent .panel-body{
+    background: rgba(46, 51, 56, 0.2)!important;
+    color: white;
 }
 
 
-
+p.help-block {
+    color: lightpink;
+}

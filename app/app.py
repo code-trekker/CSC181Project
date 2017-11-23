@@ -66,8 +66,7 @@ def login():
 
 def logout():
     logout_user()
-    msg = "You are now logged out!"
-    return render_template('logout.html', msg=msg)
+    return redirect(url_for('viewreg'))
 
 @app.route('/adminhome')
 @login_required
@@ -78,7 +77,8 @@ def adminhome():
 @app.route('/adminbudgets')
 @login_required
 def adminbudgets():
-    return render_template('budgets.html')
+    query = Budget.query.filter_by(Organization_orgCode=current_user.orgCode).order_by(Budget.schoolyear)
+    return render_template('budgets.html', query=query)
 
 @app.route('/newbudget', methods=['GET', 'POST'])
 @login_required
@@ -86,7 +86,7 @@ def newbudget():
     form = NewBudget()
     msgs = ''
     if request.method=='POST' and form.validate_on_submit():
-        check = Budget.query.filter_by(schoolyear=form.schoolyear.data, semester=form.semester.data).first_or_404()
+        check = Budget.query.filter_by(schoolyear=form.schoolyear.data, semester=form.semester.data).first()
         if check is None:
             db.session.add(Budget(schoolyear=form.schoolyear.data, semester=form.semester.data, budgetBal=form.budgetBal.data, Organization_orgCode=current_user.orgCode))
             db.session.commit()
@@ -116,7 +116,63 @@ def updatebudget():
 @app.route('/adminevents')
 @login_required
 def adminevents():
-    return render_template('events.html')
+    query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventid)
+    return render_template('events.html', query=query)
+
+@app.route('/newevent', methods=['GET','POST']) #DONE
+@login_required
+def newevent():
+    form = NewEvent()
+    msgs = ''
+    if request.method=='POST' and form.validate_on_submit():
+        check = Event.query.filter_by(eventid=form.eventid.data).first()
+        if check is None:
+            db.session.add(Event(eventid=form.eventid.data, eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data, Event_orgCode=current_user.orgCode))
+            db.session.commit()
+            return redirect(url_for('adminevents'))
+        elif check.eventid == form.eventid.data:
+            msgs = 'ID already exists in the system!'
+            return render_template('events_new.html', form=form, msgs=msgs)
+    return render_template('events_new.html', form=form, msgs=msgs)
+
+@app.route('/updateevent', methods=['GET', 'POST'])
+def updateevent():
+    form = NewEvent()
+    msgs =''
+    if request.method=='POST' and form.validate_on_submit():
+        check = Event.query.filter_by(eventid=form.eventid.data).first()
+        if check is None:
+            msgs = 'Event does not exist!'
+            return render_template('events_update.html', form=form, msgs=msgs)
+        elif check.eventid == form.eventid.data:
+            check.eventName = form.eventName.data
+            check.eventDate = form.eventDate.data
+            check.allocation = form.allocation.data
+            db.session.commit()
+            return redirect(url_for('adminevents'))
+    return render_template('events_update.html', form=form, msgs=msgs)
+
+@app.route('/deleteevent', methods=['GET','POST'])
+def deleteevent():
+    form = DelEvent()
+    msgs = ''
+    if request.method=='POST' and form.validate_on_submit():
+        check = Event.query.filter_by(eventid=form.eventid.data).first()
+        if check is None:
+            msgs = 'Event does not exist!'
+            return render_template('events_delete.html', form=form, msgs=msgs)
+        elif check.eventid == form.eventid.data:
+            Event.query.filter_by(eventid=form.eventid.data).delete()
+            db.session.commit()
+            return redirect(url_for('adminevents'))
+    return render_template('events_delete.html', form=form, msgs=msgs)
+
+@app.route('/adminexpenses')
+@login_required
+def adminexpenses():
+    return render_template('expenses.html')
+
+
 
 @app.route('/admincollection')
 @login_required
@@ -138,11 +194,6 @@ def adminlogs():
 def adminattendance():
     return render_template('attendance.html')
 
-@app.route('/adminexpenses')
-@login_required
-def adminexpenses():
-    return render_template('budgets.html')
-
 @app.route('/adminmembers')
 @login_required
 def adminmembers():
@@ -154,4 +205,5 @@ def viewhome():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 

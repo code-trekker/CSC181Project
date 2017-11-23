@@ -2,17 +2,41 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Member Sign-up
+EC Buddy
 {% endblock %}
 
 {% block styles %}
     {{ super() }}
     <link href="/static/signup.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
+
 {% block content %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">EC Buddy</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="/empty">Login</a></li>
+            <li><a href="/admin">Admins</a> </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
     {% with msg = get_flashed_messages() %}
-    <h1>Member Registration</h1>
+    <h1>    </h1>
         <h3>{{ msgs }}</h3>
     <div class="input-group">
     <form class="form form-horizontal" action="{{ url_for('viewreg')}}" method="POST" role="form">
@@ -26,12 +50,23 @@ Member Sign-up
         {{ wtf.form_field(form.course, placeholder='e.g., Computer Science, Computer Engineering, etc.') }}
         {{ wtf.form_field(form.orgCode) }}
     </dl>
-    <p><input class="btn btn-success" type=submit value=Register>
+    <p><input class="btn btn-success" type=submit value='Register Now!'>
     </form>
     </div>
-    <a href="/empty">Already registered? Click here</a>
+
     <div class="adminlink">
-    <a href="/admin">Admins log in here</a>
+    <a href="/empty">Already registered? Click here</a>
     </div>
+
+    <div class="container-fluid">
+    <div class="panel panel-primary panel-transparent">
+        <div class="panel-heading">
+             <h3 class="panel-title">What is EC Buddy?</h3>
+        </div>
+        <div class="panel-body"><p>Welcome to EC Buddy, your all-in-one manager for Executive Council-related stuff!</p></div>
+    </div>
+</div>
+
+
     {% endwith %}
 {% endblock %}

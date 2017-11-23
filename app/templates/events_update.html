@@ -16,16 +16,16 @@ New Event
 <h1>Create New Event</h1>
         <h3> {{ msgs }} </h3>
     <div class="input-event">
-    <form class="form form-horizontal" action="{{ url_for('newevent') }}" method="POST" role="form">
+    <form class="form form-horizontal" action="{{ url_for('updateevent') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.eventid, placeholder="Pick a 4-digit code e.g., 0042") }}
-        {{ wtf.form_field(form.eventName, placeholder="Name your event") }}
+        {{ wtf.form_field(form.eventid, placeholder="Enter event ID") }}
+        {{ wtf.form_field(form.eventName, placeholder="Update name") }}
         {{ wtf.form_field(form.eventDate) }}
-        {{ wtf.form_field(form.allocation, placeholder="Enter budget allocation") }}
+        {{ wtf.form_field(form.allocation, placeholder="Enter new budget allocation") }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Create">
+    <input class="btn btn-success" type="submit" value="Update">
     <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
     </form>
 

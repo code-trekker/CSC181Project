@@ -4,10 +4,14 @@
 }
 
 body {
-    background-color: #42f4c5;
+    background-image: url("admin.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
 }
 
 h1 {
+    margin-top: 75%;
     text-align: center;
 }
 
@@ -16,7 +20,14 @@ input[type=submit]{
 }
 
 a {
-    font-size: 1.5em;
     margin-left: 39.8%;
+}
+
+.navbar-brand {
+    margin-left: 2%;
+}
+
+.navbar-nav {
+    margin-left: 65.2%;
 }
 

@@ -29,7 +29,7 @@ class Member(db.Model):
     fname = db.Column(db.String(30), nullable=False)
     mname = db.Column(db.String(20), nullable=False)
     lname = db.Column(db.String(20), nullable=False)
-    course = db.Column(db.String(30), nullable=False)
+    course = db.Column(db.String(50), nullable=False)
     orgCode = db.Column(db.String(4), nullable=False)
 
     def __init__(self, memberid, fname, mname, lname, course, orgCode):
@@ -47,6 +47,8 @@ class Organization(db.Model):
     orgCode = db.Column(db.String(10), primary_key=True, autoincrement=False)
     orgName = db.Column(db.String(70), nullable=False, unique=True)
     budgets = db.relationship('Budget', backref='organization', lazy=True)
+    events = db.relationship('Event', backref='organization', lazy=True)
+    exp = db.relationship('Expenses', backref='organization', lazy=True)
 
     def __init__(self, orgCode, orgName):
         self.orgCode=orgCode
@@ -70,3 +72,41 @@ class Budget(db.Model):
 
     def __repr__(self):
         return '<Budget %r>' % self.Organization_orgCode
+
+class Event(db.Model):
+    eventid = db.Column(db.String(4), primary_key=True, autoincrement=False)
+    eventName = db.Column(db.String(30), unique=True, nullable=False)
+    eventDate = db.Column(db.String(11), nullable=False)
+    allocation = db.Column(db.DECIMAL(10,2), nullable=False)
+    Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
+    expense = db.relationship('Expenses', backref='expenses', lazy=True)
+
+    def __init__(self, eventid, eventName, eventDate, allocation, Event_orgCode):
+        self.eventid = eventid
+        self.eventName = eventName
+        self.eventDate = eventDate
+        self.allocation = allocation
+        self.Event_orgCode = Event_orgCode
+
+    def __repr__(self):
+        return '<Event %r>' % self.Event_orgCode
+
+class Expenses(db.Model):
+    expid = db.Column(db.Integer(), primary_key=True)
+    Expenses_eventid = db.Column(db.String(4), db.ForeignKey('event.eventid'), nullable=False)
+    amount = db.Column(db.DECIMAL(10,2), nullable=False)
+    date = db.Column(db.String(11), nullable=False)
+    orNo = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    Expenses_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
+
+    def __init__(self, amount, date, orNo, name, Expenses_eventid, Expenses_orgCode ):
+        self.amount = amount
+        self.date = date
+        self.orNo = orNo
+        self.name = name
+        self.Expenses_eventid = Expenses_eventid
+        self.Expenses_orgCode = Expenses_orgCode
+
+    def __repr__(self):
+        return '<Expenses %r>' % self.Expenses_orgCode
