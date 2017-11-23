@@ -7,18 +7,18 @@
 
 <h2>Collections</h2>
 {{msg}}
-<form action="{{url_for('cre_tab')}}" method = "post">
-    <select name= type>
-        <option value="assesment">Assesment</option>
-        <option value="T-shirt">T-shirt</option>
-        <option value="extra-kuri-kuri">extra-kuri-kuri</option>
-        <option value="others...">others...</option>
-    </select>
-    <br><br>
-    <input type="text" name = "cname" placeholder="Enter collection Name" required>
-    <input type="text" name = "fee" placeholder="Enter amount" required>
-    <input type="submit">
-</form>
+<div class="input-payment">
+    <form class="form form-horizontal" action="{{ url_for('cre_tab') }}" method="POST" role="form">
+    <dl>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.type) }}
+        {{ wtf.form_field(form.cname) }}
+        {{ wtf.form_field(form.fee) }}
+    </dl>
+    <input class="btn btn-success" type="submit" value="Add">
+    </form>
+    </div>
 <button onclick="window.location.href='/admincollection'">Cancel</button>
 
 </body>

@@ -1,0 +1,27 @@
+input[type=submit] {
+    margin-left: 9%;
+
+}
+
+input[type=text] {
+    width: 25%;
+}
+
+select.form-control {
+    width: 25%;
+}
+
+.input-payment {
+    margin-left: 4%;
+}
+
+
+
+label[for=cname] {
+    margin-top: -10%;
+}
+
+.input-payment {
+    margin-left: 6%;
+    margin-top: 3%;
+}

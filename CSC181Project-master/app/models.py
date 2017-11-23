@@ -47,6 +47,7 @@ class Organization(db.Model):
     orgCode = db.Column(db.String(10), primary_key=True, autoincrement=False)
     orgName = db.Column(db.String(70), nullable=False, unique=True)
     budgets = db.relationship('Budget', backref='organization', lazy=True)
+    #collections = db.relationship('Collection', backref='organization', lazy=True)
 
     def __init__(self, orgCode, orgName):
         self.orgCode=orgCode
@@ -71,19 +72,13 @@ class Budget(db.Model):
     def __repr__(self):
         return '<Budget %r>' % self.Organization_orgCode
 
-paymnt=db.Table('paymnt',
-                  db.Column("col_id", db.Integer,db.ForeignKey("collection.col_id")),
-                  db.Column("pcol_id", db.Integer, db.ForeignKey("pay.pcol_id"))
-)
 
-
-
-class collection(db.Model):
-    __tablename__="collection"
-    col_id = db.Column(db.Integer, primary_key=True, nullable=False)
+class Collection(db.Model):
+    col_id = db.Column(db.Integer(), primary_key=True, nullable=False)
     col_name=db.Column(db.String(20),nullable= False)
-    fee = db.Column(db.FLOAT(10,2), nullable=False)
+    fee = db.Column(db.DECIMAL(10,2), nullable=False)
     tOf_col=db.Column(db.String(20),nullable=False)
+    #Collection_orgCode=db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
 
     def __init__(self,col_name,fee,tOf_col):
@@ -91,16 +86,18 @@ class collection(db.Model):
         self.col_name=col_name
         self.fee=fee
         self.tOf_col=tOf_col
+        #self.Collection_orgCode = Collection_orgCode
 
 class pays(db.Model):
     __tablename__ = "pay"
-    pcol_id =db.Column(db.Integer,primary_key=True,nullable=False)
+    id = db.Column(db.Integer(), primary_key=True)
+    pcol_id =db.Column(db.Integer,unique=False, nullable=False)
     studid=db.Column(db.String(9),nullable=False)
-    date = db.Column(db.String(8),nullable=False)
-    payments = db.relationship('collection', secondary=paymnt, backref=backref("payers", lazy='dynamic'))
+    date = db.Column(db.String(11),nullable=False)
+    #payments = db.relationship('collection', secondary=paymnt, backref=backref("payers", lazy='dynamic'))
 
-    def __init__(self,studid,date):
-        self.pcol_id
+    def __init__(self,pcol_id,studid,date):
+        self.pcol_id=pcol_id
         self.studid=studid
         self.date=date
 
@@ -110,5 +107,5 @@ def add_col(tob_add):
     db.session.commit()
 
 def v_u(cname,studid):
-    cname.payers.append(studid)
+    print cname,studid
     db.session.commit()

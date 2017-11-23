@@ -8,6 +8,7 @@ Add Budget
 {% block styles %}
     {{ super() }}
     <link href="/static/budgets.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
@@ -15,7 +16,7 @@ Add Budget
 <h1>Add New Budget</h1>
         <h3> {{ msgs}}</h3>
     <div class="input-budget">
-    <form class="form form-horizontal" action="{{ url_for('newbudget')}}" method="POST" role="form">
+    <form class="form form-horizontal" action="{{ url_for('newbudget') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
@@ -23,8 +24,8 @@ Add Budget
         {{ wtf.form_field(form.semester) }}
         {{ wtf.form_field(form.budgetBal) }}
     </dl>
-    <input class="btn btn-success" type=submit value=Add>
-    <input class="btn btn-primary" type="button" value=Back onclick="window.location.href='/adminbudgets'">
+    <input class="btn btn-success" type="submit" value="Add">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminbudgets'">
     </form>
 
     </div>

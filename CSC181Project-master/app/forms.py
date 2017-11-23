@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import *
+from wtforms.fields.html5 import DateField
 
 class LoginForm(FlaskForm):
     userid = StringField('User ID', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
@@ -35,3 +36,15 @@ class NewBudget(FlaskForm):
                                                       ('2042-2043', '2042-2043'), ('2043-2044', '2043-2044'), ('2044-2045', '2044-2045')], validators=[InputRequired()])
     semester = SelectField(u'Semester', choices=[('FIRST', '1st'), ('SECOND', '2nd')], validators=[InputRequired()])
     budgetBal = DecimalField('Amount', validators=[InputRequired()])
+
+
+
+class NewCollection(FlaskForm):
+    type = SelectField(u'Type', choices= [('assesment', 'Assesment'),('tshirt', 'T-shirt'),('lanyard', 'Lanyard')])
+    cname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
+    fee = DecimalField('fee',validators=[InputRequired()])
+
+class NewPayment(FlaskForm):
+    studid = StringField('Student id',validators=[InputRequired(), Length(min=9,max=9, message="Input must be exactly 9 characters")])
+    cname = StringField('Collection Name', validators=[InputRequired(),Length(min=3, max=20, message="Input must be between 5-20 characters")])
+    date = DateField(format='%Y-%m-%d')

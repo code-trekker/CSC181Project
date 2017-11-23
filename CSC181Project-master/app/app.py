@@ -3,7 +3,7 @@ from models import *
 from forms import *
 createDB()
 createTables()
-
+print "tables created"
 def createAdmin(): #creates admin user
     db.session.add(User(userid = 'scsadmin', password=generate_password_hash('wolveswolves'), orgCode='SCS' ))
     db.session.commit()
@@ -118,61 +118,78 @@ def updatebudget():
 def adminevents():
     return render_template('events.html')
 
-@app.route('/admincollection')
-@login_required
-def admincollection():
-    return render_template('collection.html')
-
-@app.route('/col',methods=['POST','GET'])
+@app.route('/admincollection',methods=['POST','GET'])
 @login_required
 def cre_tab():
-    print "meeeeee"
-    if request.method == 'POST':
-        try:
-            print request.form['type'],request.form['cname'],request.form['fee']
-            tob_add= collection(request.form['cname'],request.form['fee'],request.form['type'])
+    form = NewCollection()
+    if request.method == 'POST' and form.validate_on_submit():
+        tob_add = Collection(col_name=form.cname.data, fee=form.fee.data, tOf_col=form.type.data)
+        check = Collection.query.filter_by(col_name=form.cname.data).first()
+        if check is None:
+            print "heyooooo"
             add_col(tob_add)
-            msg = "SUCCESS"
-            return render_template("added.html",msg=msg)
-        except:
-            msg = "error"
-            return render_template("collectionx.html",msg=msg)
+            print "hey"
+            msg = 'Collection Successfully added'
+            return render_template('collection.html', form=form, msg=msg)
+        elif check.col_name == form.cname.data:
+            print "im check"
+            msg = "error collection already existed"
+            return render_template("collection.html",form=form, msg=msg)
+    return render_template('collection.html', form=form)
 
-    return render_template('collectionx.html')
 
-@app.route('/pay',methods=['POST','GET'])
-@login_required
-def pay():
-    if request.method == 'POST':
-        try:
-            checkRow = collection.query.filter_by(col_name=request.form['cname']).first()
-            print checkRow
-            if checkRow:
-                cid=checkRow.col_id
-                print cid
-                print request.form['studid']
-                print request.form['date']
-                ch_id=pays.query.filter_by(pcol_id=cid).first()
-                ch_stud=pays.query.filter_by(studid=request.form['studid']).first()
-                print ch_id.pcol_id
 
-                if ch_id.pcol_id ==cid and ch_stud.studid==request.form['studid']:
-                    msg = "student has already paid this collection"
-                    return render_template("pays.html", msg=msg)
-        except:
-            tob_add = pays(request.form['studid'], request.form['date'])
-            add_col(tob_add)
-            # cname = checkRow.col_name
-            # v_u(cname, request.form['studid'])
-            msg = "Student with id number " + request.form['studid'] + "- PAID"
-            return render_template("pays.html", msg=msg)
-    return render_template('pay.html')
-    
 
-@app.route('/adminpays')
+
+
+
+ #_____________________________________________________________________________
+
+@app.route('/adminpays', methods=['GET', 'POST'])
 @login_required
 def adminpays():
-    return render_template('pays.html')
+    form = NewPayment()
+
+    if request.method=='POST' and form.validate_on_submit():
+        idno=form.studid.data
+
+
+        check = Collection.query.filter_by(col_name=form.cname.data).first()
+        try:
+            if check.col_name == form.cname.data:
+                cid = check.col_id
+                checkid = pays.query.filter_by(pcol_id=cid).first()
+                ch_stud = pays.query.filter_by(studid=form.studid.data).all()
+
+                # print check.col_id
+                # print checkid.pcol_id
+                # print cid == ch_stud.pcol_id
+                # print cid == checkid.pcol_id
+                for row in ch_stud:
+                    print form.studid.data
+                    print row.studid
+                    if cid == row.pcol_id and form.studid.data == row.studid:
+                        print "im check"
+                        msg = "error collection already existed"
+                        return render_template("pays.html", form=form, msg=msg)
+                        break
+
+
+                else:
+                    tob_add = pays(pcol_id=check.col_id, studid=idno, date=form.date.data)
+                    add_col(tob_add)
+                    print "hey"
+                    msg = 'Collection Successfully added'
+                    return render_template('pays.html', form=form, msg=msg)
+        except:
+            tob_add = pays(pcol_id=check.col_id, studid=idno, date=form.date.data)
+            add_col(tob_add)
+            print "hey"
+            msg = 'Collection Successfully added'
+            return render_template('pays.html', form=form, msg=msg)
+
+
+    return render_template('pays.html', form=form)
 
 @app.route('/adminlogs')
 @login_required
