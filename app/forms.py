@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import *
+from wtforms.fields.html5 import DateField
 
 class LoginForm(FlaskForm):
     userid = StringField('User ID', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
@@ -35,3 +36,19 @@ class NewBudget(FlaskForm):
                                                       ('2042-2043', '2042-2043'), ('2043-2044', '2043-2044'), ('2044-2045', '2044-2045')], validators=[InputRequired()])
     semester = SelectField(u'Semester', choices=[('FIRST', '1st'), ('SECOND', '2nd')], validators=[InputRequired()])
     budgetBal = DecimalField('Amount', validators=[InputRequired()])
+
+class NewEvent(FlaskForm):
+    eventid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
+    eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5,max=30, message='Invalid input')])
+    eventDate = DateField('Event Date', format='%Y-%m-%d')
+    allocation = DecimalField('Allocation', validators=[InputRequired()])
+
+class DelEvent(FlaskForm):
+    eventid = StringField('Event Code', validators=[InputRequired(), Length(min=4,max=4, message='Invalid event code')])
+
+#class NewExpense(FlaskForm):
+
+class NewAttendance(FlaskForm):
+    eventid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
+    memberid = StringField('ID number', validators=[InputRequired(), Length(min=8, max=8, message="ID must be 8 characters long.")])
+    attendDate = DateField('Attend Date', format='%Y-%m-%d')

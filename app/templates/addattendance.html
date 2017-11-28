@@ -1,0 +1,33 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+Add Attendance
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="/static/budgets.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+    {% with msg = get_flashed_messages() %}
+<h1>Add New Budget</h1>
+        <h3> {{ msgs}}</h3>
+    <div class="input-budget">
+    <form class="form form-horizontal" action="{{ url_for('addattendance') }}" method="POST" role="form">
+    <dl>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.studentID) }}
+        {{ wtf.form_field(form.eventID) }}
+        {{ wtf.form_field(form.attendDate) }}
+    </dl>
+    <input class="btn btn-success" type="submit" value="Add">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminbudgets'">
+    </form>
+
+    </div>
+    {% endwith %}
+{% endblock %}
