@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Budgets
+Events
 {% endblock %}
 {% block styles %}
     {{super()}}
@@ -28,7 +28,6 @@ Budgets
 <ul>
    <li><a href="/adminhome"><span>Home</span></a></li>
    <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminpays"><span>Payments</span></a></li>
    <li><a href="/adminattendance"><span>Attendance</span></a></li>
    <li><a href="/adminbudgets"><span>Budgets</span></a></li>
    <li><a href="/adminexpenses"><span>Expenses</span></a></li>
@@ -41,14 +40,32 @@ Budgets
 
 <div id="main"><br><br><br>
   <h1 style="font-family: sans-serif">Events</h1>
+{% with msg = get_flashed_messages() %}
+    {% if msg %}
+        {% for alert in msg %}
+            <div class="messages">
+            <div class="col-sm-6 col-md-6">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    ×</button>
+                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
+
+            </div>
+        </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
   <div class="show-tables">
     <table class="table table-fixed">
         <thead class="events">
             <tr>
                 <th>Event ID</th>
-                <th>Event Name</th>
+                <th width="-15%">Event Name</th>
                 <th>Date</th>
-                   <th>Budget Allocation</th>
+                <th>Budget Allocation</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -58,6 +75,8 @@ Budgets
                 <td>{{ event.eventName }}</td>
                 <td>{{ event.eventDate }}</td>
                 <td>{{ event.allocation }}</td>
+                <td><a href="{{ url_for('updateevent', eventid=event.eventid) }}"><i class="glyphicon glyphicon-file"></i>Edit</a></td>
+                <td><a href="{{ url_for('deleteevent', eventid=event.eventid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a></td>
             </tr>
         {% endfor %}
         </tbody>
@@ -67,9 +86,7 @@ Budgets
 
   <div class="events">
   <a class="btn btn-primary" href="/newevent">Create Event</a>
-  <a class="btn btn-primary" href="/updateevent">Edit Event Details</a>
-  <a class="btn btn-primary" href="/deleteevent">Remove Event</a>
   </div>
 </div>
-
+{% endwith %}
 {% endblock %}

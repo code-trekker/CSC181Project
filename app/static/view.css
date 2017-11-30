@@ -1,0 +1,33 @@
+
+.input-group {
+    margin-left: 42%;
+}
+
+body {
+    background-image: url("student1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
+
+h1 {
+    margin-top: 75%;
+    text-align: center;
+}
+
+input[type=submit]{
+    margin-left: 37%;
+}
+
+a {
+    margin-left: 39.8%;
+}
+
+.navbar-brand {
+    margin-left: 2%;
+}
+
+.navbar-nav {
+    margin-left: 65.2%;
+}
+

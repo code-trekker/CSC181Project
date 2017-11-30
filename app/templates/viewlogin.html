@@ -5,8 +5,8 @@
 Login
 {% endblock %}
 {% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="/static/login.css">
+    {{super()}}
+    <link rel="stylesheet" href="/static/view.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
@@ -25,7 +25,7 @@ Login
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="#about">About</a></li>
-            <li><a href="/viewerlogin">Login</a></li>
+            <li><a href="/empty">Login</a></li>
             <li><a href="/admin">Admins</a> </li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -34,12 +34,11 @@ Login
 
 <div class="input-group">
 <h1>Sign In</h1>
-    <form class="form form-horizontal" action="{{ url_for('login')}}" method="POST" role="form" autocomplete="off">
+    <form class="form form-horizontal" action="{{ url_for('viewerlogin')}}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.userid) }}
-        {{ wtf.form_field(form.password) }}
+        {{ wtf.form_field(form.memberid, placeholder="Enter ID without dashs") }}
     </dl>
         <p><input class="btn btn-primary" type=submit value=Login></p>
     </form>

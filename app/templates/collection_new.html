@@ -1,0 +1,32 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New Collection
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="/static/collection.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+    {% with msg = get_flashed_messages() %}
+<h1>Create New Collection</h1>
+        <h3> {{ msgs }} </h3>
+    <div class="input-collection">
+    <form class="form form-horizontal" action="{{ url_for('newcollection') }}" method="POST" role="form">
+    <dl>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.colname, placeholder="What is this collection for?") }}
+        {{ wtf.form_field(form.fee, placeholder="Enter amount to be collected") }}
+    </dl>
+    <input class="btn btn-success" type="submit" value="Create">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/admincollection'">
+    </form>
+
+    </div>
+    {% endwith %}
+{% endblock %}

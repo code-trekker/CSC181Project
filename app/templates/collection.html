@@ -28,7 +28,6 @@ Collection
 <ul>
    <li><a href="/adminhome"><span>Home</span></a></li>
    <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminpays"><span>Payments</span></a></li>
    <li><a href="/adminattendance"><span>Attendance</span></a></li>
    <li><a href="/adminbudgets"><span>Budgets</span></a></li>
    <li><a href="/adminexpenses"><span>Expenses</span></a></li>
@@ -41,6 +40,53 @@ Collection
 
 <div id="main"><br><br><br>
   <h1 style="font-family: sans-serif">Collections</h1>
-  <h2></h2>
+{% with msg = get_flashed_messages() %}
+    {% if msg %}
+        {% for alert in msg %}
+            <div class="messages">
+            <div class="col-sm-6 col-md-6">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    ×</button>
+                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
+
+            </div>
+        </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+<div class="show-tables">
+    <table class="table table-fixed">
+        <thead class="collection">
+            <tr>
+                <th>Collection Name</th>
+                <th>Amount To Be Paid</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Payment</th>
+                <th>List of Paid Students</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for collect in query %}
+            <tr>
+                <td>{{ collect.colname }}</td>
+                <td>{{ collect.fee }}</td>
+                <td><a href="{{ url_for('updatecollection', colid=collect.colid) }}"><i class="glyphicon glyphicon-file"></i>Edit</a></td>
+                <td><a href="{{ url_for('deletecollection', colid=collect.colid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a></td>
+                <td><a href="{{ url_for('newpayment', colid=collect.colid) }}"><i class="glyphicon glyphicon-tag"></i>Make Payment</a></td>
+                <td><a href="#"><i class="glyphicon glyphicon-list"></i>View</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
+
+
+<div class="collections">
+  <a class="btn btn-primary" href="/newcollection">Create A Collection</a>
+</div>
+</div>
+{% endwith %}
 {% endblock %}

@@ -28,7 +28,6 @@ Budgets
 <ul>
    <li><a href="/adminhome"><span>Home</span></a></li>
    <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminpays"><span>Payments</span></a></li>
    <li><a href="/adminattendance"><span>Attendance</span></a></li>
    <li><a href="/adminbudgets"><span>Budgets</span></a></li>
    <li><a href="/adminexpenses"><span>Expenses</span></a></li>
@@ -58,7 +57,6 @@ Budgets
                 <td>{{ budget.schoolyear }}</td>
                 <td>{{ budget.semester }}</td>
                 <td>{{ budget.budgetBal }}</td>
-                <!-- <td><a href="{{ url_for('updatebudget', schoolyear=budget.schoolyear, semester=budget.semester) }}">EDIT</a></td> -->
             </tr>
         {% endfor %}
         </tbody>

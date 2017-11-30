@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Budgets
+Members
 {% endblock %}
 {% block styles %}
     {{super()}}
@@ -28,7 +28,6 @@ Budgets
 <ul>
    <li><a href="/adminhome"><span>Home</span></a></li>
    <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminpays"><span>Payments</span></a></li>
    <li><a href="/adminattendance"><span>Attendance</span></a></li>
    <li><a href="/adminbudgets"><span>Budgets</span></a></li>
    <li><a href="/adminexpenses"><span>Expenses</span></a></li>
@@ -41,27 +40,35 @@ Budgets
 
 <div id="main"><br><br><br>
   <h1 style="font-family: sans-serif">Members</h1>
-  <h2></h2>
 
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
-  <p>Some text some text some text some text..</p>
+<div class="show-tables">
+    <table class="table table-fixed">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for member in query %}
+            <tr>
+                <td>{{ member.memberid }}</td>
+                <td>{{ member.fname }}</td>
+                <td>{{ member.mname }}</td>
+                <td>{{ member.lname }}</td>
+                <td>{{ member.course }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
 </div>
 {% endblock %}

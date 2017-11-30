@@ -1,8 +1,9 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+
 {% block title %}
-Budgets
+Expenses
 {% endblock %}
 {% block styles %}
     {{super()}}
@@ -24,11 +25,11 @@ Budgets
 {% endblock %}
 
 {% block content %}
+
 <div id='cssmenu'>
 <ul>
    <li><a href="/adminhome"><span>Home</span></a></li>
    <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminpays"><span>Payments</span></a></li>
    <li><a href="/adminattendance"><span>Attendance</span></a></li>
    <li><a href="/adminbudgets"><span>Budgets</span></a></li>
    <li><a href="/adminexpenses"><span>Expenses</span></a></li>
@@ -41,11 +42,53 @@ Budgets
 
 <div id="main"><br><br><br>
   <h1 style="font-family: sans-serif">Expenses</h1>
+{% with msg = get_flashed_messages() %}
+    {% if msg %}
+        {% for alert in msg %}
+            <div class="messages">
+            <div class="col-sm-6 col-md-6">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    ×</button>
+                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
 
+            </div>
+        </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+  <div class="show-tables">
+    <table class="table table-fixed">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Date of Expenditure</th>
+                <th>OR Number</th>
+                <th width="230px">Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for exp in query %}
+            <tr>
+                <td>{{ exp.expid }}</td>
+                <td>{{ exp.name }}</td>
+                <td>{{ exp.amount }}</td>
+                <td>{{ exp.date }}</td>
+                <td>{{ exp.orNo }}</td>
+                <td><a href="{{ url_for('updateexpense', expid=exp.expid) }}"><i class="glyphicon glyphicon-file"></i>Edit</a></td>
+                <td><a href="{{ url_for('deleteexpense', expid=exp.expid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endwith %}
   <div class="expenses">
   <a class="btn btn-primary" href="/newexpense">Record Expenses</a>
-  <a class="btn btn-primary" href="/updateexpense">Edit Expense Details</a>
-  <a class="btn btn-primary" href="/deleteexpense">Delete Expense</a>
   </div>
 
 </div>

@@ -1,15 +1,18 @@
+import datetime as datetime
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import *
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateField, DateTimeField
 
 class LoginForm(FlaskForm):
     userid = StringField('User ID', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=12, message=None)])
 
+class ViewLogin(FlaskForm):
+    memberid = IntegerField('Enter Student ID', validators=[InputRequired(), Length(min=8, max=8, message="Invalid ID")])
 
 class NewMember(FlaskForm):
-    memberid = StringField('ID number', validators=[InputRequired(), Length(min=8, max=8, message="ID must be 8 characters long.")])
+    memberid = IntegerField('ID number', validators=[InputRequired()])
     fname = StringField('First Name', validators=[InputRequired(), Length(min=3, max=30, message="Must be at least 3 characters long")])
     mname = StringField('Middle Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
     lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
@@ -38,12 +41,45 @@ class NewBudget(FlaskForm):
     budgetBal = DecimalField('Amount', validators=[InputRequired()])
 
 class NewEvent(FlaskForm):
-    eventid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
+    eventid = IntegerField('Event ID', validators=[InputRequired()])
     eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5,max=30, message='Invalid input')])
     eventDate = DateField('Event Date', format='%Y-%m-%d')
     allocation = DecimalField('Allocation', validators=[InputRequired()])
 
-class DelEvent(FlaskForm):
-    eventid = StringField('Event Code', validators=[InputRequired(), Length(min=4,max=4, message='Invalid event code')])
+class UpEvent(FlaskForm):
+    eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5, max=30, message='Invalid input')])
+    eventDate = DateField('Event Date', format='%Y-%m-%d')
+    allocation = DecimalField('Allocation', validators=[InputRequired()])
 
-#class NewExpense(FlaskForm):
+class DelEvent(FlaskForm):
+    eventid = StringField('Event ID', validators=[InputRequired(), Length(min=4,max=4, message='Invalid event code')])
+
+class NewExpense(FlaskForm):
+    expid = IntegerField('ID', validators=[InputRequired()])
+    eid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
+    amount = DecimalField('Amount', validators=[InputRequired()])
+    date = DateField('Date Spent', format='%Y-%m-%d')
+    orNo = StringField('OR Number', validators=[InputRequired(), Length(max=30, message='OR Number too long')])
+    name = StringField('Name', validators=[InputRequired(), Length(max=50, message='Too many characters')])
+
+class UpExpense(FlaskForm):
+    amount = DecimalField('Amount', validators=[InputRequired()])
+    date = DateField('Date Spent', format='%Y-%m-%d')
+    orNo = StringField('OR Number', validators=[InputRequired(), Length(max=30, message='OR Number too long')])
+    name = StringField('Name', validators=[InputRequired(), Length(max=50, message='Too many characters')])
+
+class DelExpense(FlaskForm):
+    expid = IntegerField('ID', validators=[InputRequired(), Length(min=4, max=4, message='Invalid ID')])
+
+class NewCollection(FlaskForm):
+    #type = SelectField(u'Type', choices=[('assessment', 'Assessment'), ('tshirt', 'T-shirt'), ('lanyard', 'Lanyard'), ('others', 'Others')])
+    colname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
+    fee = DecimalField('Set Amount', validators=[InputRequired()])
+
+class UpCollection(FlaskForm):
+    colname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
+    fee = DecimalField('Set Amount', validators=[InputRequired()])
+
+class NewPayment(FlaskForm):
+    memberid = IntegerField('Student ID', validators=[InputRequired()])
+    datetime = DateField('Date Paid', format='%Y-%m-%d')
