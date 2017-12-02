@@ -1,0 +1,35 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New Expense
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link href="/static/expenses.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+    {% with msg = get_flashed_messages() %}
+<h1>Add New Expense</h1>
+        <h3> {{ msgs }} </h3>
+    <div class="input-expense">
+    <form class="form form-horizontal" action="{{ url_for('newexpense') }}" method="POST" role="form">
+    <dl>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.expid, placeholder="Pick a 4-digit ID") }}
+        {{ wtf.form_field(form.eid, placeholder="Enter event ID") }}
+        {{ wtf.form_field(form.name, placeholder="e.g., t-shirt printing") }}
+        {{ wtf.form_field(form.amount, placeholder="Enter amount spent") }}
+        {{ wtf.form_field(form.date) }}
+        {{ wtf.form_field(form.orNo, placeholder="Enter OR number") }}
+    </dl>
+    <input class="btn btn-success" type="submit" value="Create">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminexpenses'">
+    </form>
+    </div>
+    {% endwith %}
+{% endblock %}

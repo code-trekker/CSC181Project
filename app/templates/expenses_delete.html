@@ -2,28 +2,28 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Remove Event
+Delete Record
 {% endblock %}
 
 {% block styles %}
     {{ super() }}
-    <link href="/static/events.css" rel="stylesheet">
+    <link href="/static/expenses.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
-<h1>Delete An Event</h1>
+<h1>Delete a Record</h1>
         <h3> {{ msgs }} </h3>
-    <div class="input-event">
-    <form class="form form-horizontal" action="{{ url_for('deleteevent', eventid=eventid) }}" method="POST" role="form">
+    <div class="input-expense">
+    <form class="form form-horizontal" action="{{ url_for('deleteexpense', expid=expid) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.eventid, placeholder="Enter event ID") }}
+        {{ wtf.form_field(form.expid, placeholder="Enter existing ID") }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Remove">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
+    <input class="btn btn-success" type="submit" value="Delete">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminexpenses'">
     </form>
     </div>
 
