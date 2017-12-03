@@ -22,13 +22,12 @@ EC Buddy
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">EC Buddy</a>
+          <a class="navbar-brand" href="/">EC Buddy</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="/empty">Login</a></li>
+            <li><a href="/viewerlogin">Login</a></li>
             <li><a href="/admin">Admins</a> </li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -36,26 +35,31 @@ EC Buddy
     </nav>
 
     {% with msg = get_flashed_messages() %}
-    <h1>    </h1>
-        <h3>{{ msgs }}</h3>
-    <div class="input-group">
-    <form class="form form-horizontal" action="{{ url_for('viewreg')}}" method="POST" role="form">
-    <dl>
-        {{ form.hidden_tag() }}
-        {{ form.csrf_token }}
-        {{ wtf.form_field(form.memberid, placeholder='Enter your ID without dash, e.g., 20150001') }}
-        {{ wtf.form_field(form.fname, placeholder='Enter first name') }}
-        {{ wtf.form_field(form.mname, placeholder='Enter middle name') }}
-        {{ wtf.form_field(form.lname, placeholder='Enter last name') }}
-        {{ wtf.form_field(form.course, placeholder='e.g., Computer Science, Computer Engineering, etc.') }}
-        {{ wtf.form_field(form.orgCode) }}
-    </dl>
-    <p><input class="btn btn-success" type=submit value='Register Now!'>
+    <h1></h1>
+
+    <div class = "container">
+	<div class="wrapper">
+
+    <form class="form-signin" name="Login_Form" action="{{ url_for('viewreg')}}" method="POST" role="form" autocomplete="off">
+        <h3 class="form-signin-heading">Registration Form</h3>
+            <hr class="colorgraph"><br>
+        <h4>{{ msgs }}</h4>
+        <dl>
+            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.memberid, placeholder='Enter your ID without dash, e.g., 20150001') }}
+            {{ wtf.form_field(form.fname, placeholder='First Name') }}
+            {{ wtf.form_field(form.mname, placeholder='Middle Name') }}
+            {{ wtf.form_field(form.lname, placeholder='Last Name') }}
+            {{ wtf.form_field(form.course, placeholder='Course Name e.g., Computer Science, Computer Engineering') }}
+            {{ wtf.form_field(form.orgCode) }}
+        </dl>
+        <button class="btn btn-lg btn-success btn-block"  name="Submit" value="Register Now!" type="Submit">Register Now!</button>
+        <div class="viewlink">
+    <a href="/viewerlogin">Already registered? Click here</a>
+    </div>
     </form>
     </div>
-
-    <div class="adminlink">
-    <a href="/empty">Already registered? Click here</a>
     </div>
 
     <div class="container-fluid">
@@ -63,10 +67,19 @@ EC Buddy
         <div class="panel-heading">
              <h3 class="panel-title">What is EC Buddy?</h3>
         </div>
-        <div class="panel-body"><p>Welcome to EC Buddy, your all-in-one manager for Executive Council-related stuff!</p></div>
+        <div class="panel-body">
+            <p>
+                Welcome to EC Buddy, your all-in-one manager for Executive Council-related stuff!<br>
+            </p>
+            As a member, you can:
+            <ul>
+                <li>View budgets from the current and past semesters</li>
+                <li>Look at expenses for current and past events</li>
+                <li>Monitor events that your EC has planned</li>
+            </ul>
+
+        </div>
     </div>
 </div>
-
-
     {% endwith %}
 {% endblock %}

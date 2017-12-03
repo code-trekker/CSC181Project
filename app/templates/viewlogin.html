@@ -5,13 +5,12 @@
 Login
 {% endblock %}
 {% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="/static/login.css">
+    {{super()}}
+    <link rel="stylesheet" href="/static/view.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
-
 <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -35,28 +34,18 @@ Login
 
 <div class = "container">
 	<div class="wrapper">
-		<form action="{{ url_for('login')}}" method="POST" name="Login_Form" class="form-signin" role="form" autocomplete="off">
-            {% with msg = get_flashed_messages() %}
-        {% if msg %}
-            {% for ms in msg %}
-                <p class="errormsg">{{ ms }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-		    <h3 class="form-signin-heading">Admin Sign In</h3>
-			  <hr class="colorgraph"><br>
-                <dl>
-                    {{ form.hidden_tag() }}
-                    {{ form.csrf_token }}
-                    {{ wtf.form_field(form.userid) }}
-                    {{ wtf.form_field(form.password) }}
-                </dl>
-                    <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
-                <a class="register" href="/viewerlogin">Not an admin? Click here</a>
-		</form>
-	</div>
+        <form class="form-signin" name="Login_Form" action="{{ url_for('viewerlogin')}}" method="POST" role="form" autocomplete="off">
+            <h3 class="form-signin-heading">Member Sign In</h3>
+            <hr class="colorgraph"><br>
+            <dl>
+            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.memberid, placeholder="Enter ID without dashes") }}
+            </dl>
+            <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+        </form>
+    </div>
 </div>
-
 
 {% endblock %}
 

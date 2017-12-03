@@ -1,159 +1,38 @@
+<!--
 <!doctype html>
 <html lang=''>
 <head>
    <meta charset='utf-8'>
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+   /<link href="/static/homepage1.css" rel="stylesheet">/
+   /<link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage1.css">/
+   <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage1.css"   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
    <script src="script.js"></script>
-   <title>Viewer Homepage</title>
-   <style>
-   @import url(http://fonts.googleapis.com/css?family=Open+Sans:700);
-#cssmenu {
-  position: fixed;
-  background: #6495ED;
-  width: 100%;
-}
-#cssmenu a {
-  display: inline-block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 20px 20px;
-  text-decoration: none;
-  font-size: 17px;
-  margin: 1px 2px;
-  cursor: pointer;
-}
-#cssmenu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  display: block;
-  zoom: 1;
-}
-#cssmenu ul:after {
-  content: " ";
-  display: block;
-  font-size: 0;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
-#cssmenu ul li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
-#cssmenu.align-right ul li {
-  float: right;
-}
-#cssmenu.align-center ul {
-  text-align: center;
-}
-#cssmenu ul li a {
-  color: #ffffff;
-  text-decoration: none;
-  display: block;
-  padding: 15px 25px;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 14px;
-  position: relative;
-  -webkit-transition: color .25s;
-  -moz-transition: color .25s;
-  -ms-transition: color .25s;
-  -o-transition: color .25s;
-  transition: color .25s;
-}
-#cssmenu ul li a:hover {
-  color: #333333;
-}
-#cssmenu ul li a:hover:before {
-  width: 100%;
-}
-#cssmenu ul li a:after {
-  content: "";
-  display: block;
-  position: absolute;
-  right: -3px;
-  top: 19px;
-  height: 6px;
-  width: 6px;
-  background: #ffffff;
-  opacity: .5;
-}
-#cssmenu ul li a:before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 0;
-  background: #333333;
-  -webkit-transition: width .25s;
-  -moz-transition: width .25s;
-  -ms-transition: width .25s;
-  -o-transition: width .25s;
-  transition: width .25s;
-}
-#cssmenu ul li.last > a:after,
-#cssmenu ul li:last-child > a:after {
-  display: none;
-}
-#cssmenu ul li.active a {
-  color: #333333;
-}
-#cssmenu ul li.active a:before {
-  width: 100%;
-}
-#cssmenu.align-right li.last > a:after,
-#cssmenu.align-right li:last-child > a:after {
-  display: block;
-}
-#cssmenu.align-right li:first-child a:after {
-  display: none;
-}
-@media screen and (max-width: 768px) {
-  #cssmenu ul li {
-    float: none;
-    display: block;
-  }
-  #cssmenu ul li a {
-    width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    border-bottom: 1px solid #fb998c;
-  }
-  #cssmenu ul li.last > a,
-  #cssmenu ul li:last-child > a {
-    border: 0;
-  }
-  #cssmenu ul li a:after {
-    display: none;
-  }
-  #cssmenu ul li a:before {
-    display: none;
-  }
-  #main {
-  padding: 16px;
-  margin-top: 30px;
-  height: 1500px;
-  }
+   <script type="text/javascript">
+     function swapStylesheet(sheet){
+      document.getElementById('pagestyle').setAttribute('href', sheet);
+     }
 
- </style>
+   </script>
+   <title>Viewer Homepage</title>
 </head>
 <body>
 
 <div id='cssmenu'>
 <ul>
-   <li><a href="viewer_budgets.html" target="_self"><span>Budgets</span></a></li>
-   <li><a href="viewer_expenses.html" target="_self"><span>Expense</span></a></li>
-   <li><a href="viewer_events.html" target="_self"><span>Events</span></a></li>
-   <li><a href="/logout"><span>Logout</span></a></li>
+   <li><a href="/viewerbudgets" target="_self"><span>Budgets</span></a></li>
+   <li><a href="/viewerexpenses" target="_self"><span>Expense</span></a></li>
+   <li><a href="/viewerevents" target="_self"><span>Events</span></a></li>
+   <li><a href="/viewerlogin"><span>Back</span></a></li>
+   <div class="dropdown" style="float: right;">
+  <button class="dropbtn">Select Theme</button>
+  <div class="dropdown-content">
+    <a onclick="swapStylesheet('/static/homepage2.css')" style="color: black">Dark</a>
+    <a onclick="swapStylesheet('/static/homepage3.css')" style="color: black">Bright</a>
+    <a onclick="swapStylesheet('/static/homepage1.css')" style="color: black">Default</a>
+  </div>
+</div>
 </ul>
 </div>
 
@@ -186,3 +65,138 @@
 
 </body>
 <html>
+-->
+<html>
+<head>
+<meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!--<link href="/static/homepage1.css" rel="stylesheet">-->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage1.css">
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+function swapStylesheet(sheet){
+  document.getElementById('pagestyle').setAttribute('href', sheet);
+}
+
+</script>
+<script>
+function show(shown, hidden1, hidden2, hidden3) {
+  document.getElementById(shown).style.display='block';
+  document.getElementById(hidden1).style.display='none';
+  document.getElementById(hidden2).style.display='none';
+  document.getElementById(hidden3).style.display='none';
+  return false;
+}
+</script>
+</head>
+
+<div id='cssmenu'>
+<ul>
+   <li><a href="/viewerhome" style="margin-right:0.5em" onclick="return show('home','budgets','events','expenses');">Home</a></li>
+   <li><a href="/viewerbudgets" style="margin-right:0.5em" onclick="return show('budgets','events','expenses','home');">Budgets</a></li>
+   <li><a href="/viewerexpenses" style="margin-right:0.5em" onclick=" return show('expenses','events','budgets','home');">Expenses</a></li>
+   <li><a href="/viewerevents" style="margin-right:0.5em" onclick=" return show('events','budgets','expenses','home');">Events</a></li>
+   <li><a href="/viewerlogin"><span>Back</span></a></li>
+   <div class="dropdown" style="float: right;">
+  <button class="dropbtn"><span><i class="glyphicon glyphicon-cog" style="margin-right:0.5em"> Settings </i></span></button>
+  <div class="dropdown-content">
+    <a onclick="swapStylesheet('/static/homepage2.css')" style="color: black">Pink</a>
+    <a onclick="swapStylesheet('/static/homepage3.css')" style="color: black">Purple</a>
+    <a onclick="swapStylesheet('/static/homepage1.css')" style="color: black">Default</a>
+  </div>
+</div>
+</ul>
+</div>
+
+<body>
+<div id="home"><br><br><br>
+  <h1>Welcome to EC Buddy!</h1>
+</div>
+<div id="budgets" style="display: none;"><br><br><br>
+  <h1 style="font-family: sans-serif">Budgets</h1>
+  <h2></h2>
+  <h2></h2>
+
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+</div>
+
+<div id="events" style="display: none;"><br><br><br>
+  <h1 style="font-family: sans-serif">Events</h1>
+  <h2></h2>
+  <h2></h2>
+
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+</div>
+
+<div id="expenses" style="display: none;"><br><br><br>
+  <h1 style="font-family: sans-serif">Expenses</h1>
+  <h2></h2>
+  <h2></h2>
+
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+  <p>Some text some text some text some text..</p>
+</div>
+
+</body>
+</html>

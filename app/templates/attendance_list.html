@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Attendance
+Paid Students
 {% endblock %}
 {% block styles %}
     {{super()}}
@@ -24,24 +24,32 @@ Attendance
 {% endblock %}
 
 {% block content %}
-<div id='cssmenu'>
-<ul>
-   <li><a href="/adminhome"><span>Home</span></a></li>
-   <li><a href="/admincollection"><span>Collection</span></a></li>
-   <li><a href="/adminattendance"><span>Attendance</span></a></li>
-   <li><a href="/adminbudgets"><span>Budgets</span></a></li>
-   <li><a href="/adminexpenses"><span>Expenses</span></a></li>
-   <li><a href="/adminevents"><span>Events</span></a></li>
-   <li><a href="/adminmembers"><span>Members</span></a></li>
-    <li><a href="/adminlogs"><span>Logs</span></a></li>
-   <li><a href="/logout"><span>Logout</span></a></li>
-</ul>
-</div>
-
 <div id="main"><br><br><br>
-  <h1 style="font-family: sans-serif">Attendance</h1>
-  <h2></h2>
+  <h1 style="font-family: sans-serif">Attendance for: {{ check.eventName }}</h1>
 
-
+<div class="show-tables">
+    <table class="table table-fixed">
+        <thead class="collection">
+            <tr>
+                <th>Student ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Sign In</th>
+                <th>Sign Out</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for res in query %}
+            <tr>
+                <td>{{ res.memberid }}</td>
+                <td>{{ res.lname }}</td>
+                <td>{{ res.fname }}</td>
+                <td>{{ res.signin }}</td>
+                <td>{{ res.signout }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 </div>
 {% endblock %}

@@ -2,12 +2,12 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Update Event
+    Update Record
 {% endblock %}
 
 {% block styles %}
     {{ super() }}
-    <link href="/static/events.css" rel="stylesheet">
+    <link href="/static/collection.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
@@ -15,17 +15,16 @@ Update Event
     {% with msg = get_flashed_messages() %}
 <h1>Update Event</h1>
         <h3> {{ msgs }} </h3>
-    <div class="input-event">
-    <form class="form form-horizontal" action="{{ url_for('updateevent', eventid=eventid) }}" method="POST" role="form">
+    <div class="input-collection">
+    <form class="form form-horizontal" action="{{ url_for('updatecollection', colid=colid) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.eventName, placeholder="Update name") }}
-        {{ wtf.form_field(form.eventDate) }}
-        {{ wtf.form_field(form.allocation, placeholder="Enter new budget allocation") }}
+        {{ wtf.form_field(form.colname, placeholder="Enter new name") }}
+        {{ wtf.form_field(form.fee, placeholder="Enter new amount") }}
     </dl>
     <input class="btn btn-success" type="submit" value="Update">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/admincollection'">
     </form>
 
     </div>

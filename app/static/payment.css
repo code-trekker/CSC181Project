@@ -1,10 +1,10 @@
-.input-budget {
+.input-payment {
     margin-left: 43%;
     margin-top: 2%;
 }
 
 input[type=submit]{
-    margin-left: 5.8%;
+    margin-left: 4.5%;
 }
 
 input[type=text]{
@@ -40,10 +40,6 @@ h3 {
     font-style: italic;
 }
 
-select.form-control {
+#datetime {
     width: 27%;
 }
-
-
-
-

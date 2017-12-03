@@ -1,10 +1,10 @@
-.input-budget {
+.input-expense {
     margin-left: 43%;
-    margin-top: 2%;
+    margin-top: 0.5%;
 }
 
 input[type=submit]{
-    margin-left: 5.8%;
+    margin-left: 4.8%;
 }
 
 input[type=text]{
@@ -22,7 +22,7 @@ select {
 h1 {
     size: 50px;
     text-align: center;
-    margin-top: 8%;
+    margin-top: 6%;
 }
 
 a {
@@ -40,10 +40,7 @@ h3 {
     font-style: italic;
 }
 
-select.form-control {
+#date {
     width: 27%;
 }
-
-
-
 
