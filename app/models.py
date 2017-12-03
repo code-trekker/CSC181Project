@@ -35,6 +35,7 @@ class Member(db.Model):
     course = db.Column(db.String(50), nullable=False)
     orgCode = db.Column(db.String(4), nullable=False)
     payment = db.relationship('Payments', backref='member', lazy=True)
+    attends = db.relationship('Attendance', backref='member', lazy=True)
 
     def __init__(self, memberid, fname, mname, lname, course, orgCode):
         self.memberid=memberid
@@ -92,7 +93,7 @@ class Payments(db.Model):
         self.Payments_orgCode=Payments_orgCode
 
     def __repr__(self):
-        return '<Payments #r>' % self.Payments_orgCode
+        return '<Payments %r>' % self.Payments_orgCode
 
 class Budget(db.Model):
     budgetid = db.Column(db.Integer(), primary_key=True, autoincrement=True)
@@ -117,6 +118,7 @@ class Event(db.Model):
     allocation = db.Column(db.DECIMAL(10,2), nullable=False)
     Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
     expense = db.relationship('Expenses',cascade='all,delete-orphan', backref=db.backref('expenses', cascade="all"), lazy=True, single_parent=True)
+    attendance = db.relationship('Attendance', backref='event', lazy=True)
 
     def __init__(self, eventid, eventName, eventDate, allocation, Event_orgCode):
         self.eventid = eventid
@@ -148,3 +150,21 @@ class Expenses(db.Model):
 
     def __repr__(self):
         return '<Expenses %r>' % self.Expenses_orgCode
+
+class Attendance(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    memberid = db.Column(Integer(8), db.ForeignKey('member.memberid'), nullable=False, unique=False)
+    eventid = db.Column(Integer(4), db.ForeignKey('event.eventid'), nullable=False)
+    date = db.Column(db.String(20), nullable=False)
+    signin = db.Column(db.String(5), nullable=True)
+    signout = db.Column(db.String(5), nullable=True)
+
+    def __init__(self, memberid, eventid, date, signin, signout):
+        self.memberid=memberid
+        self.eventid=eventid
+        self.date=date
+        self.signin=signin
+        self.signout=signout
+
+    def __repr__(self):
+        return '<Attendance %r>' % self.date

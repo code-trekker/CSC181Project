@@ -11,6 +11,7 @@ Login
 {% endblock %}
 
 {% block content %}
+
 <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -32,19 +33,30 @@ Login
       </div>
     </nav>
 
-<div class="input-group">
-<h1>Sign In</h1>
-    <form class="form form-horizontal" action="{{ url_for('login')}}" method="POST" role="form" autocomplete="off">
-    <dl>
-        {{ form.hidden_tag() }}
-        {{ form.csrf_token }}
-        {{ wtf.form_field(form.userid) }}
-        {{ wtf.form_field(form.password) }}
-    </dl>
-        <p><input class="btn btn-primary" type=submit value=Login></p>
-    </form>
-
+<div class = "container">
+	<div class="wrapper">
+		<form action="{{ url_for('login')}}" method="POST" name="Login_Form" class="form-signin" role="form" autocomplete="off">
+            {% with msg = get_flashed_messages() %}
+        {% if msg %}
+            {% for ms in msg %}
+                <p class="errormsg">{{ ms }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+		    <h3 class="form-signin-heading">Admin Sign In</h3>
+			  <hr class="colorgraph"><br>
+                <dl>
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token }}
+                    {{ wtf.form_field(form.userid) }}
+                    {{ wtf.form_field(form.password) }}
+                </dl>
+                    <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+                <a class="register" href="/viewerlogin">Not an admin? Click here</a>
+		</form>
+	</div>
 </div>
+
 
 {% endblock %}
 

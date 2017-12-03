@@ -5,11 +5,11 @@ from wtforms.validators import *
 from wtforms.fields.html5 import DateField, DateTimeField
 
 class LoginForm(FlaskForm):
-    userid = StringField('User ID', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
+    userid = StringField('Username', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=12, message=None)])
 
 class ViewLogin(FlaskForm):
-    memberid = IntegerField('Enter Student ID', validators=[InputRequired(), Length(min=8, max=8, message="Invalid ID")])
+    memberid = IntegerField('Student ID', validators=[InputRequired()])
 
 class NewMember(FlaskForm):
     memberid = IntegerField('ID number', validators=[InputRequired()])
@@ -38,18 +38,18 @@ class NewBudget(FlaskForm):
                                                       ('2039-2040', '2039-2040'), ('2040-2041', '2040-2041'), ('2041-2042', '2041-2042'),
                                                       ('2042-2043', '2042-2043'), ('2043-2044', '2043-2044'), ('2044-2045', '2044-2045')], validators=[InputRequired()])
     semester = SelectField(u'Semester', choices=[('FIRST', '1st'), ('SECOND', '2nd')], validators=[InputRequired()])
-    budgetBal = DecimalField('Amount', validators=[InputRequired()])
+    budgetBal = DecimalField('Amount', validators=[InputRequired()], default=0)
 
 class NewEvent(FlaskForm):
     eventid = IntegerField('Event ID', validators=[InputRequired()])
     eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5,max=30, message='Invalid input')])
     eventDate = DateField('Event Date', format='%Y-%m-%d')
-    allocation = DecimalField('Allocation', validators=[InputRequired()])
+    allocation = DecimalField('Allocation', validators=[InputRequired()], default=0)
 
 class UpEvent(FlaskForm):
     eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5, max=30, message='Invalid input')])
     eventDate = DateField('Event Date', format='%Y-%m-%d')
-    allocation = DecimalField('Allocation', validators=[InputRequired()])
+    allocation = DecimalField('Allocation', validators=[InputRequired()], default=0)
 
 class DelEvent(FlaskForm):
     eventid = StringField('Event ID', validators=[InputRequired(), Length(min=4,max=4, message='Invalid event code')])
@@ -57,13 +57,13 @@ class DelEvent(FlaskForm):
 class NewExpense(FlaskForm):
     expid = IntegerField('ID', validators=[InputRequired()])
     eid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
-    amount = DecimalField('Amount', validators=[InputRequired()])
+    amount = DecimalField('Amount', validators=[InputRequired()], default=0)
     date = DateField('Date Spent', format='%Y-%m-%d')
     orNo = StringField('OR Number', validators=[InputRequired(), Length(max=30, message='OR Number too long')])
     name = StringField('Name', validators=[InputRequired(), Length(max=50, message='Too many characters')])
 
 class UpExpense(FlaskForm):
-    amount = DecimalField('Amount', validators=[InputRequired()])
+    amount = DecimalField('Amount', validators=[InputRequired()], default=0)
     date = DateField('Date Spent', format='%Y-%m-%d')
     orNo = StringField('OR Number', validators=[InputRequired(), Length(max=30, message='OR Number too long')])
     name = StringField('Name', validators=[InputRequired(), Length(max=50, message='Too many characters')])
@@ -78,8 +78,12 @@ class NewCollection(FlaskForm):
 
 class UpCollection(FlaskForm):
     colname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
-    fee = DecimalField('Set Amount', validators=[InputRequired()])
+    fee = DecimalField('Set Amount', validators=[InputRequired()], default=0)
 
 class NewPayment(FlaskForm):
     memberid = IntegerField('Student ID', validators=[InputRequired()])
     datetime = DateField('Date Paid', format='%Y-%m-%d')
+
+class NewAttendance(FlaskForm):
+    memberid = IntegerField('Student ID', validators=[InputRequired()])
+    attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
