@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password271997@localhost/purity'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password271997@localhost/ghost'
 #app.config['SECRET_KEY'] = 'seulrene'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['USE_SESSION_FOR_NEXT'] = True
@@ -18,8 +18,8 @@ Bootstrap(app)
 
 def createDB():
     engine = sqlalchemy.create_engine('mysql://root:password271997@localhost')# connects to server
-    engine.execute("CREATE DATABASE IF NOT EXISTS purity") #create db
-    engine.execute("USE purity") # select new
+    engine.execute("CREATE DATABASE IF NOT EXISTS ghost") #create db
+    engine.execute("USE ghost") # select new
 
 def createTables():
     db.create_all()

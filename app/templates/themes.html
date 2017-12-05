@@ -1,0 +1,46 @@
+<div id='cssmenu'>
+<ul>
+   <li><a href="/viewerhome" style="margin-right:0.5em" onclick="return show('home','budgets','events','expenses');">Home</a></li>
+
+   <li><a href="/viewerbudgets" style="margin-right:0.5em" onclick="return show('budgets','events','expenses','home');">Budgets</a></li>
+
+   <li><a href="/viewerexpenses" style="margin-right:0.5em" onclick=" return show('expenses','events','budgets','home');">Expenses</a></li>
+   <li><a href="/viewerevents" style="margin-right:0.5em" onclick=" return show('events','budgets','expenses','home');">Events</a></li>
+
+   <li><a href="/viewerlogin">Log out</a></li>
+   <div class="dropdown" style="float: right;">
+  <button class="dropbtn"><span><i class="glyphicon glyphicon-cog" style="margin-right:0.5em"> Settings </i></span></button>
+  <div class="dropdown-content">
+     <a onclick="swapStylesheet(1,'/static/homepage2.css')" style="color: black">Bright</a>
+    <a onclick="swapStylesheet(2,'/static/homepage3.css')" style="color: black">Dark</a>
+    <a onclick="swapStylesheet(0,'/static/homepage1.css')" style="color: black">Default</a>
+  </div>
+</div>
+</ul>
+</div>
+
+<script type="text/javascript">
+function swapStylesheet(themeid,sheet){
+  /*document.getElementById('pagestyle').setAttribute('href', sheet);*/
+
+  $.ajax({
+    url:"/swaptheme/"+themeid,
+    method: "POST",
+    success: function(resp){
+      document.getElementById('pagestyle').setAttribute('href', sheet);
+
+      //console.log(resp);
+
+    },
+    error: function(resp){
+
+    }
+  });
+
+
+
+}
+
+
+
+</script>

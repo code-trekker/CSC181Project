@@ -16,7 +16,7 @@ class NewMember(FlaskForm):
     fname = StringField('First Name', validators=[InputRequired(), Length(min=3, max=30, message="Must be at least 3 characters long")])
     mname = StringField('Middle Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
     lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
-    course = StringField('Course Name', validators=[InputRequired(), Length(min=10, max=50, message="Must be at least 10 characters long")])
+    course = StringField('Course Name', validators=[InputRequired(), Length(min=10, max=30, message="Must be at least 10 characters long")])
     orgCode= SelectField(u'Organization', choices=[('SCS', 'School of Computer Studies'),
                                                    ('CBAA', 'College of Business Administration'),
                                                    ('CSM', 'College of Science and Mathematics'),
@@ -87,7 +87,3 @@ class NewPayment(FlaskForm):
 class NewAttendance(FlaskForm):
     memberid = IntegerField('Student ID', validators=[InputRequired()])
     attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
-'''
-class Studtheme(FlaskForm):
-    theme = SelectField(u'Theme', choices=[('1', '/static/homepage1.css'), ('2', '/static/homepage2.css'), ('3', '/static/homepage3.css')], validators=[InputRequired()])
-    '''

@@ -1,7 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:700);
+
 .dropbtn {
   text-align: center;
-  background-color: #9C27B0;
+  background-color: #2D5396;
   color: white;
   padding-top: 7px;
   padding-right: 7px;
@@ -55,7 +56,7 @@ a:hover{background-color:#f1f1f1}
 
 #cssmenu {
   position: fixed;
-  background: #800080;
+  background-color: #123471;
   width: 100%;
 }
 #cssmenu a {
@@ -193,23 +194,27 @@ a:hover{background-color:#f1f1f1}
   margin-top: 30px;
   height: 1500px;
   background-color: #E1BEE7;
+  background: #E1BEE7;
 }
 #expenses {
   padding: 16px;
   margin-top: 30px;
   height: 1500px;
   background-color: #E1BEE7;
+  background: #E1BEE7;
 }
 #events {
   padding: 16px;
   margin-top: 30px;
   height: 1500px;
   background-color: #E1BEE7;
+  background: #E1BEE7;
 }
 #home {
   padding: 16px;
   margin-top: 30px;
   height: 1500px;
   background-color: #E1BEE7;
+  background: #E1BEE7;
 }
 

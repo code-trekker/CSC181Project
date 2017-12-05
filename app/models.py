@@ -27,6 +27,16 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.id)
 
+class Themes(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, unique=True, autoincrement=True)
+    theme = db.Column(db.String(32), nullable=False)
+    def __init__(self, id, theme):
+        self.id=id
+        self.theme=theme
+
+    def __repr__(self):
+        return '<Themes %r>' % self.id
+
 class Member(db.Model):
     memberid = db.Column(db.Integer(), primary_key=True, unique=True, autoincrement=False)
     fname = db.Column(db.String(30), nullable=False)
@@ -34,19 +44,23 @@ class Member(db.Model):
     lname = db.Column(db.String(20), nullable=False)
     course = db.Column(db.String(50), nullable=False)
     orgCode = db.Column(db.String(4), nullable=False)
+    themeid =  db.Column(db.Integer(),db.ForeignKey('themes.id'))
     payment = db.relationship('Payments', backref='member', lazy=True)
     attends = db.relationship('Attendance', backref='member', lazy=True)
-
-    def __init__(self, memberid, fname, mname, lname, course, orgCode):
+   
+    def __init__(self, memberid, fname, mname, lname, course, orgCode,themeid=0):
         self.memberid=memberid
         self.fname=fname
         self.mname=mname
         self.lname=lname
         self.course=course
         self.orgCode=orgCode
+        self.themeid = themeid
 
     def __repr__(self):
         return '<Member %r>' % self.fname
+
+
 
 class Organization(db.Model):
     orgCode = db.Column(db.String(10), primary_key=True, autoincrement=False)
@@ -168,17 +182,3 @@ class Attendance(db.Model):
 
     def __repr__(self):
         return '<Attendance %r>' % self.date
-'''
-class Studtheme(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    memberid = db.Column(Integer(8), db.ForeignKey('member.memberid'),nullable=False, unique=False)
-    theme = db.Column(Integer(1))
-    template = db.relationship('Member', backref='Studtheme', lazy=True)
-
-    def __init__(self, memberid, theme):
-        self.memberid=memberid
-        self.theme=theme
-
-    def __repr__(self):
-        return '<Studtheme %r>' % self.theme
-'''

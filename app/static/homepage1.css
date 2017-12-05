@@ -55,7 +55,7 @@ a:hover{background-color:#f1f1f1}
 
 #cssmenu {
   position: fixed;
-  background: #6495ED;
+  background-color: #1C53B5;
   width: 100%;
 }
 #cssmenu a {

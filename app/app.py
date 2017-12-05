@@ -376,9 +376,10 @@ def deletepayment(colid):
 def adminlogs():
     return render_template('logs.html')
 
-@app.route('/viewerlogin', methods=['GET', 'POST'])
+@app.route('/viewerlogin', methods=['GET','POST'])
 def viewerlogin():
     form = ViewLogin()
+    
     if request.method=='POST' and form.validate_on_submit():
         member = Member.query.filter_by(memberid=form.memberid.data).first()
         if member is None:
@@ -386,7 +387,10 @@ def viewerlogin():
             return render_template('viewlogin.html', form=form, msgs=msgs)
         else:
             #db.session.add(studtheme(memberid=form.memberid.data), theme=1)
-            return render_template('viewerhomepage.html', form=form)
+            session['memberid'] = member.memberid
+            session['themeid'] = member.themeid
+
+            return render_template('viewerhomepage.html')
     return render_template('viewlogin.html', form=form)
 
 @app.route('/viewerbudgets')
@@ -408,29 +412,20 @@ def viewhome():
 @app.route('/viewerhome')
 def viewerhome():
     return render_template('viewerhomepage.html')
-'''
-@app.route('/viewerlogin', methods=['GET', 'POST'])
-def viewerlogin():
-    form = ViewLogin()
+
+@app.route('/swaptheme/<int:themeid>', methods=['GET', 'POST'])
+def swaptheme(themeid):
+    member = Member.query.filter_by(memberid=session['memberid']).first()
+    print(session['memberid'])
+    member.themeid = themeid
+    db.session.commit()
+    session['themeid'] = themeid
     
-    if request.method=='POST' and form.validate_on_submit():
-        member = Member.query.filter_by(memberid=form.memberid.data).first()
-        themE = Studtheme.query.filter_by(memberid=form.memberid.data).first()
-        #themE = Studtheme.query.first(memberid=form.memberid.data)
-        if member is None:
-            msgs = "Member is not yet registered!"
-            return render_template('viewlogin.html', form=form, msgs=msgs, theme=theme)
-        elif themE == form.memberid.data:
-            form = Studtheme()
-            theme = themE.theme
-            return render_template('viewerhomepage.html', form=form, theme=theme)
-        else:
-            form = Studtheme()
-            theme = 1
-            db.session.add(Studtheme(memberid=form.memberid.data, theme=theme))
-            return render_template('viewerhomepage.html', form=form, theme=theme)
-    return render_template('viewlogin.html', form=form)
-'''
+    return "hahahah"
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
