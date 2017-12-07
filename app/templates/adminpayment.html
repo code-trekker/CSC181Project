@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New Payment
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link href="/static/payment.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+    {% with msg = get_flashed_messages() %}
+        {% if msg %}
+        {% for alert in msg %}
+            <div class="messages">
+            <div class="col-sm-6 col-md-6">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    ×</button>
+                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
+
+            </div>
+        </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+<h1>Record Payment</h1>
+        <h3> {{ msgs }} </h3>
+    <div class="input-payment">
+    <form class="form form-horizontal" action="{{ url_for('adminpayment') }}" method="POST" role="form">
+    <dl>
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ wtf.form_field(form.colname) }}
+        {{ wtf.form_field(form.memberid, placeholder="ID without dashes e.g. 20150012") }}
+
+    </dl>
+    <input class="btn btn-success" type="submit" value="Confirm">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
+    </form>
+
+    </div>
+    {% endwith %}
+{% endblock %}

@@ -1,5 +1,6 @@
 import sqlalchemy
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import *
 from flask_bootstrap import Bootstrap
@@ -10,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:4321@localhost/flaskapp'
 #app.config['SECRET_KEY'] = 'seulrene'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['USE_SESSION_FOR_NEXT'] = True
-app.secret_key = 'seulrene'
+app.secret_key = os.urandom(24)
 app.debug = True
 db = SQLAlchemy(app)
 Bootstrap(app)

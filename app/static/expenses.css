@@ -25,13 +25,17 @@ h1 {
     margin-top: 6%;
 }
 
+#eid {
+    width: 27%;
+}
+
 a {
     font-size: 2em;
     margin-left: 38%;
 }
 
 body {
-    background-color: #42f4c5;
+    background-color: cornflowerblue;
 }
 
 h3 {

@@ -34,15 +34,17 @@ class Member(db.Model):
     lname = db.Column(db.String(20), nullable=False)
     course = db.Column(db.String(50), nullable=False)
     orgCode = db.Column(db.String(4), nullable=False)
+    status = db.Column(db.String(10), nullable=False)
     payment = db.relationship('Payments', backref='member', lazy=True)
     attends = db.relationship('Attendance', backref='member', lazy=True)
 
-    def __init__(self, memberid, fname, mname, lname, course, orgCode):
+    def __init__(self, memberid, fname, mname, lname, course, orgCode, status):
         self.memberid=memberid
         self.fname=fname
         self.mname=mname
         self.lname=lname
         self.course=course
+        self.status=status
         self.orgCode=orgCode
 
     def __repr__(self):
@@ -51,15 +53,18 @@ class Member(db.Model):
 class Organization(db.Model):
     orgCode = db.Column(db.String(10), primary_key=True, autoincrement=False)
     orgName = db.Column(db.String(70), nullable=False, unique=True)
+    description = db.Column(db.String(800), nullable=False)
     budgets = db.relationship('Budget', backref='organization', lazy=True)
     events = db.relationship('Event', backref='organization', lazy=True)
     exp = db.relationship('Expenses', backref='organization', lazy=True)
     collect = db.relationship('Collection', backref='organization', lazy=True)
     payrec = db.relationship('Payments', backref='organization', lazy=True)
+    logs = db.relationship('Logs', backref='organization', lazy=True)
 
-    def __init__(self, orgCode, orgName):
+    def __init__(self, orgCode, orgName, description):
         self.orgCode=orgCode
         self.orgName=orgName
+        self.description=description
 
     def __repr__(self):
         return '<Organization %r>' %self.orgCode
@@ -77,7 +82,7 @@ class Collection(db.Model):
         self.Collection_orgCode=Collection_orgCode
 
     def __repr__(self):
-        return '<Collection %r>' % self.Collection_orgCode
+        return "%s" % (self.colname)
 
 class Payments(db.Model):
     pid = db.Column(db.Integer(), primary_key=True)
@@ -112,7 +117,7 @@ class Budget(db.Model):
         return '<Budget %r>' % self.Organization_orgCode
 
 class Event(db.Model):
-    eventid = db.Column(Integer(4), primary_key=True, autoincrement=False)
+    eventid = db.Column(db.Integer(), primary_key=True)
     eventName = db.Column(db.String(30), unique=True, nullable=False)
     eventDate = db.Column(db.String(11), nullable=False)
     allocation = db.Column(db.DECIMAL(10,2), nullable=False)
@@ -120,27 +125,25 @@ class Event(db.Model):
     expense = db.relationship('Expenses',cascade='all,delete-orphan', backref=db.backref('expenses', cascade="all"), lazy=True, single_parent=True)
     attendance = db.relationship('Attendance', backref='event', lazy=True)
 
-    def __init__(self, eventid, eventName, eventDate, allocation, Event_orgCode):
-        self.eventid = eventid
+    def __init__(self, eventName, eventDate, allocation, Event_orgCode):
         self.eventName = eventName
         self.eventDate = eventDate
         self.allocation = allocation
         self.Event_orgCode = Event_orgCode
 
     def __repr__(self):
-        return '<Event %r>' % self.Event_orgCode
+        return "%s" % (self.eventName)
 
 class Expenses(db.Model):
-    expid = db.Column(Integer(4), primary_key=True, autoincrement=False)
-    Expenses_eventid = db.Column(Integer(4), db.ForeignKey('event.eventid'), nullable=False)
+    expid = db.Column(db.Integer(), primary_key=True)
+    Expenses_eventid = db.Column(db.Integer(), db.ForeignKey('event.eventid'), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.DECIMAL(10,2), nullable=False)
     date = db.Column(db.String(11), nullable=False)
     orNo = db.Column(db.String(30), nullable=False)
     Expenses_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
-    def __init__(self, expid, amount, date, orNo, name, Expenses_eventid, Expenses_orgCode ):
-        self.expid=expid
+    def __init__(self, amount, date, orNo, name, Expenses_eventid, Expenses_orgCode ):
         self.amount = amount
         self.date = date
         self.orNo = orNo
@@ -154,7 +157,7 @@ class Expenses(db.Model):
 class Attendance(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     memberid = db.Column(Integer(8), db.ForeignKey('member.memberid'), nullable=False, unique=False)
-    eventid = db.Column(Integer(4), db.ForeignKey('event.eventid'), nullable=False)
+    eventid = db.Column(db.Integer(), db.ForeignKey('event.eventid'), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     signin = db.Column(db.String(5), nullable=True)
     signout = db.Column(db.String(5), nullable=True)
@@ -168,3 +171,29 @@ class Attendance(db.Model):
 
     def __repr__(self):
         return '<Attendance %r>' % self.date
+
+
+class Logs(db.Model):
+    i = db.Column(db.Integer, primary_key=True)
+    idno = db.Column(db.String(8), nullable=False)
+    fname = db.Column(db.String(50), nullable=False)
+    lname = db.Column(db.String(50), nullable=False)
+    dnt = db.Column(db.String(30), nullable=False)
+    orgCode = db.Column(db.String(4), db.ForeignKey('organization.orgCode'), nullable=False, unique=False)
+
+    def __init__(self, idno, fname, lname, dnt, orgCode):
+        self.idno = idno
+        self.fname = fname
+        self.lname = lname
+        self.dnt = dnt
+        self.orgCode=orgCode
+
+class Courses(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    coursename= db.Column(db.String(40), nullable=True)
+
+    def __init__(self, coursename):
+        self.coursename = coursename
+
+    def __repr__(self):
+        return "%s" % (self.coursename)

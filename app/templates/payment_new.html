@@ -13,6 +13,20 @@ New Payment
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
+        {% if msg %}
+        {% for alert in msg %}
+            <div class="messages">
+            <div class="col-sm-6 col-md-6">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    ×</button>
+                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
+
+            </div>
+        </div>
+            </div>
+        {% endfor %}
+        {% endif %}
 <h1>Record Payment</h1>
         <h3> {{ msgs }} </h3>
     <div class="input-payment">
@@ -24,7 +38,7 @@ New Payment
         {{ wtf.form_field(form.datetime) }}
     </dl>
     <input class="btn btn-success" type="submit" value="Confirm">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/admincollection'">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
 
     </div>

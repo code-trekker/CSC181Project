@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+First-Time Setup
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/addInput.js" language="Javascript" type="text/javascript"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="/static/bootstrap.min1.css" rel="stylesheet">
+    {{ super() }}
+    <link href="/static/signup.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block content %}
+
+    <div class = "container">
+	<div class="wrapper1">
+
+    <form class="form-signin" name="Login_Form" action="{{ url_for('setup')}}" method="POST" role="form" autocomplete="off">
+        <h3 class="form-signin-heading">Admin Setup</h3>
+            <hr class="colorgraph"><br>
+        <h4>{{ msgs }}</h4>
+        <dl>
+            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.username, placeholder='Choose a username')}}
+            {{ wtf.form_field(form.password, placeholder= 'Choose a password') }}
+            {{ wtf.form_field(form.orgName, placeholder='What is the name of your organization?') }}
+            {{ wtf.form_field(form.orgCode, placeholder='Choose a 4-character code for your organization') }}
+            {{ wtf.form_field(form.description, placeholder='Short description of your organization') }}
+            <h5 style="font-style: italic">*If your organization has no courses, leave this part blank</h5>
+            <h6 style="font-style: italic">**Separate courses by commas</h6>
+            {{ wtf.form_field(form.courses, placeholder="Computer Science, Information Technology, etc.") }}
+        </dl>
+
+        <button class="btn btn-lg btn-success btn-block" name="setup" value="Confirm" type="Submit" style="margin-top: 5%">Confirm</button>
+    </form>
+
+    </div>
+    </div>
+
+
+{% endblock %}

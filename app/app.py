@@ -1,22 +1,15 @@
 from flask_sqlalchemy import Pagination
+import re
 from sqlalchemy import join
 from werkzeug.exceptions import abort
-
+from datetime import timedelta
 from controller import *
 from models import *
 from forms import *
+import os
 
 createDB()
 createTables()
-
-def createAdmin(): #creates admin user
-    db.session.add(User(userid = 'scsadmin', password=generate_password_hash('wolveswolves'), orgCode='SCS' ))
-    db.session.commit()
-
-if User.query.filter_by(userid='scsadmin').first()==None: #temporary
-    createAdmin()
-else:
-    pass
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -34,28 +27,53 @@ def unauthorized():
     flash('Admin rights needed to access this page')
     return redirect(url_for('login'))
 
+@app.route('/setup', methods=['GET','POST'])
+def setup():
+    form = AdminSetup()
+    check = Organization.query.first()
+    if check is None:
+        if request.method=='POST' and form.validate_on_submit():
+            db.session.add(User(userid=form.username.data, password=generate_password_hash(form.password.data), orgCode=form.orgCode.data))
+            db.session.add(Organization(orgCode=form.orgCode.data, orgName=form.orgName.data, description=form.description.data))
+            list = form.courses.data
+            print form.courses.data
+            def commaSep(list):
+                new_list = re.split(', |,',list)
+                for data in new_list:
+                    db.session.add(Courses(coursename=data))
+            commaSep(list)
+            db.session.commit()
+            return redirect(url_for('login'))
+    else:
+        return redirect(url_for('viewreg'))
+    return render_template('setup.html', form=form)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def viewreg():
-    form = NewMember()
-    msgs=''
-    if request.method == 'POST' and form.validate_on_submit():
-        memberid = Member.query.filter_by(memberid=int(form.memberid.data)).first()
-        if memberid is None:
-            member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
-                            lname=form.lname.data, course=form.course.data, orgCode=form.orgCode.data)
-            db.session.add(member)
-            db.session.commit()
-            return redirect(url_for('viewhome'))
-        elif memberid.memberid == int(form.memberid.data):
-            msgs = "ID already registered!"
-            return render_template('signup.html', form=form, msgs=msgs)
-    return render_template('signup.html', form=form, msgs=msgs)
+        form = NewMember()
+        msgs=''
+        description = db.session.query(Organization.description).first()
+        name = db.session.query(Organization.orgName).first()
+        org = db.session.query(Organization.orgCode).first()
+        if request.method == 'POST' and form.validate_on_submit():
+            memberid = Member.query.filter_by(memberid=int(form.memberid.data)).first()
+            if memberid is None:
+                member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
+                            lname=form.lname.data, course=form.course.data, orgCode=org.orgCode, status='ACTIVE')
+                db.session.add(member)
+                db.session.commit()
+                return redirect(url_for('viewerlogin'))
+            elif memberid.memberid == int(form.memberid.data):
+                msgs = "ID already registered!"
+                return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
+        return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
 
 
 @app.route('/admin', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    name = db.session.query(Organization.orgName).first()
     if request.method=='POST' and form.validate_on_submit():
         userid = User.query.filter_by(userid=form.userid.data).first()
         if userid.userid == form.userid.data:
@@ -63,11 +81,11 @@ def login():
                 login_user(userid, remember=True)
                 return redirect(url_for('adminhome'))
             else:
-                return render_template('index.html', form=form)
+                return render_template('index.html', form=form, name=name)
         else:
             flash("Username or password is invalid")
-            return render_template('index.html', form=form)
-    return render_template('index.html', form=form)
+            return render_template('index.html', form=form, name=name)
+    return render_template('index.html', form=form, name=name)
 
 @app.route('/logout')
 
@@ -78,14 +96,14 @@ def logout():
 @app.route('/adminhome')
 @login_required
 def adminhome():
-    msg = 'Login successful! The current user is ' + str(current_user.userid)
-    return render_template('adminhomepage.html', msg=msg)
+    msgs = 'Hello there, ' + str(current_user.userid) + '! Welcome to the admin homepage!'
+    return render_template('adminhomepage.html', msgs=msgs)
 
-@app.route('/adminbudgets/', defaults={'page_num':1})
-@app.route('/adminbudgets/<int:page_num>')
+
+@app.route('/adminbudgets/')
 @login_required
-def adminbudgets(page_num):
-    query = Budget.query.filter_by(Organization_orgCode=current_user.orgCode).order_by(Budget.schoolyear).paginate(per_page=10, page=page_num, error_out=True)
+def adminbudgets():
+    query = Budget.query.filter_by(Organization_orgCode=current_user.orgCode).order_by(Budget.schoolyear)
     return render_template('budgets.html', query=query)
 
 @app.route('/newbudget', methods=['GET', 'POST'])
@@ -121,11 +139,10 @@ def updatebudget():
                 return redirect(url_for('adminbudgets'))
     return render_template('updatebudget.html', form=form, msgs=msgs)
 
-@app.route('/adminevents/', defaults={'page_num':1})
-@app.route('/adminevents/<int:page_num>', methods=['GET', 'POST'])
+@app.route('/adminevents/', methods=['GET', 'POST'])
 @login_required
-def adminevents(page_num):
-    query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventDate).paginate(per_page=10, page=page_num, error_out=True)
+def adminevents():
+    query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventDate)
     return render_template('events.html', query=query)
 
 @app.route('/newevent', methods=['GET','POST']) #DONE
@@ -134,15 +151,10 @@ def newevent():
     form = NewEvent()
     msgs = ''
     if request.method=='POST' and form.validate_on_submit():
-        check = Event.query.filter_by(eventid=int(form.eventid.data)).first()
-        if check is None:
-            db.session.add(Event(eventid=int(form.eventid.data), eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data, Event_orgCode=current_user.orgCode))
-            db.session.commit()
-            flash(" Success! You have added a new event!")
-            return redirect(url_for('adminevents'))
-        elif check.eventid == int(form.eventid.data):
-            msgs = 'ID already exists in the system!'
-            return render_template('events_new.html', form=form, msgs=msgs)
+        db.session.add(Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data, Event_orgCode=current_user.orgCode))
+        db.session.commit()
+        flash(" Success! You have added a new event!")
+        return redirect(url_for('adminevents'))
     return render_template('events_new.html', form=form, msgs=msgs)
 
 @app.route('/updateevent/<int:eventid>', methods=['GET', 'POST'])
@@ -163,9 +175,9 @@ def updateevent(eventid):
             return redirect(url_for('adminevents'))
     return render_template('events_update.html', form=form, msgs=msgs, eventid=eventid)
 
-@app.route('/deleteevent/', defaults={'page_num':1})
-@app.route('/deleteevent/<int:page_num>/<int:eventid>', methods=['GET','POST'])
-def deleteevent(eventid, page_num):
+
+@app.route('/deleteevent/<int:eventid>', methods=['GET','POST'])
+def deleteevent(eventid):
     try:
         Event.query.filter_by(eventid=eventid).delete()
         db.session.commit()
@@ -173,8 +185,47 @@ def deleteevent(eventid, page_num):
         return redirect(url_for('adminevents'))
     except:
         flash(' Cannot delete events that have existing expenses/attendance records!')
-        query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventDate).paginate(per_page=10, page=page_num, error_out=True)
+        query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventDate)
         return render_template('events.html', query=query)
+
+@app.route('/adminattendance',methods=['POST', 'GET']) #datatables
+@login_required
+def adminattendance():
+    form = AdminAttendance()
+    if request.method=='POST' and form.validate_on_submit():
+        now=datetime.datetime.now()
+        query =Event.query.filter_by(eventName=str(form.ev_name.data)).first()
+        check = Attendance.query.filter_by(memberid=form.memberid.data, eventid=query.eventid).first()
+        member = Member.query.filter_by(memberid=form.memberid.data).first()
+        if member is None:
+            flash(' Student does not exist!')
+            return render_template('adminattendance.html', form=form)
+        if check is None:
+            if form.attendtype.data == 'IN':
+                db.session.add(Attendance(memberid=form.memberid.data, eventid=query.eventid, date=now.strftime("%Y-%m-%d %H:%M"),
+                                          signin=form.attendtype.data, signout=None))
+                db.session.commit()
+                flash(' Student recorded successfully!')
+                return render_template('adminattendance.html',form=form)
+            if form.attendtype.data == 'OUT':
+                db.session.add(Attendance(memberid=form.memberid.data, eventid=query.eventid, date=now.strftime("%Y-%m-%d %H:%M"), signin=None,
+                                          signout=form.attendtype.data))
+                db.session.commit()
+                flash(' Student recorded successfully!')
+                return render_template('attendance_new.html',form=form)
+        elif check.memberid == form.memberid.data and check.eventid == query.eventid:
+            if form.attendtype.data == 'IN':
+                check.signin = form.attendtype.data
+                db.session.commit()
+                flash(' Student recorded successfully!')
+                return render_template('adminattendance.html',form=form)
+            if form.attendtype.data == 'OUT':
+                check.signout = form.attendtype.data
+                db.session.commit()
+                flash(' Student recorded successfully!')
+                return render_template('adminattendance.html',form=form)
+    return render_template('adminattendance.html', form=form)
+
 
 @app.route('/newattendance/<int:eventid>/<eventdate>', methods=['GET', 'POST'])
 @login_required
@@ -206,25 +257,17 @@ def newattendance(eventid, eventdate):
                 return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
     return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
 
-@app.route('/attendancelist/<int:eventid>')
+@app.route('/attendancelist/<int:eventid>/<int:page_num>')
 @login_required
-def attendancelist(eventid):
+def attendancelist(eventid, page_num):
     check = Event.query.filter_by(eventid=eventid).first()
     query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid, Member.fname, Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
-    return render_template('attendance_list.html', eventid=eventid, query=query, check=check)
-
-@app.route('/adminexpenses/', defaults={'page_num':1})
-@app.route('/adminexpenses/<int:page_num>')
-@login_required
-def adminexpenses(page_num): #TAGGED
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter_by(Event_orgCode=current_user.orgCode)
     def paginate(query, page, per_page=10, error_out=True): #had to add this to bypass strict rules about paginating a query object LMAO
         if error_out and page < 1:
             abort(404)
         items = query.limit(per_page).offset((page - 1) * per_page).all()
         if not items and page != 1 and error_out:
             abort(404)
-
         # No need to count if we're on the first page and there are fewer
         # items than we expected.
         if page == 1 and len(items) < per_page:
@@ -233,30 +276,27 @@ def adminexpenses(page_num): #TAGGED
             total = query.order_by(None).count()
 
         return Pagination(query, page, per_page, total, items)
+    q = paginate(query,page_num)
+    return render_template('attendance_list.html', eventid=eventid, query=q, check=check)
 
-    q = paginate(query, page_num)
-    return render_template('expenses.html', query=q)
+@app.route('/adminexpenses/')
+@login_required
+def adminexpenses():
+    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter_by(Event_orgCode=current_user.orgCode)
+    return render_template('expenses.html', query=query)
 
 @app.route('/newexpense', methods=['GET', 'POST'])
 @login_required
 def newexpense():
     form = NewExpense(Expenses_orgCode=current_user.orgCode)
+    query = Event.query.filter_by(eventName=str(form.eid.data)).first()
     msgs=''
     if request.method=='POST' and form.validate_on_submit():
-        check = Event.query.filter_by(eventid=int(form.eid.data)).first()
-        query = Expenses.query.filter_by(expid=int(form.expid.data)).first()
-        if check is None:
-            msgs='Event does not exist!'
-            return render_template('expenses_new.html', form=form, msgs=msgs)
-        elif check.eventid == int(form.eid.data) and query is None:
-            db.session.add(Expenses(expid=int(form.expid.data), Expenses_eventid=form.eid.data, amount=form.amount.data, date=form.date.data,
+        db.session.add(Expenses(Expenses_eventid=query.eventid, amount=form.amount.data, date=form.date.data,
                                     orNo=form.orNo.data, name=form.name.data, Expenses_orgCode=current_user.orgCode))
-            db.session.commit()
-            flash(' Record successfully added!')
-            return redirect(url_for('adminexpenses'))
-        elif query.expid == int(form.expid.data):
-            msgs='Record already exists!'
-            return render_template('expenses_new.html', form=form, msgs=msgs)
+        db.session.commit()
+        flash(' Record successfully added!')
+        return redirect(url_for('adminexpenses'))
     return render_template('expenses_new.html', form=form, msgs=msgs)
 
 @app.route('/updateexpense/<int:expid>', methods=['GET', 'POST'])
@@ -287,18 +327,18 @@ def deleteexpense(expid):
     flash(' You have successfully removed a record.')
     return redirect(url_for('adminexpenses'))
 
-@app.route('/adminmembers/', defaults={'page_num':1})
-@app.route('/adminmembers/<int:page_num>')
+
+@app.route('/adminmembers/')
 @login_required
-def adminmembers(page_num):
-    query = Member.query.filter_by(orgCode=current_user.orgCode).order_by(Member.lname).paginate(per_page=10, page=page_num, error_out=True)
+def adminmembers():
+    query = Member.query.filter_by(status='ACTIVE').order_by(Member.lname)
     return render_template('members.html', query=query)
 
-@app.route('/admincollection/', defaults={'page_num':1})
-@app.route('/admincollection/<int:page_num>')
+
+@app.route('/admincollection/', methods=['GET', 'POST'])
 @login_required
-def admincollection(page_num):
-    query = Collection.query.filter_by(Collection_orgCode = current_user.orgCode).order_by(Collection.colid).paginate(per_page=10, page=page_num, error_out=True)
+def admincollection():
+    query = Collection.query.filter_by(Collection_orgCode = current_user.orgCode).order_by(Collection.colid)
     return render_template('collection.html', query=query)
 
 @app.route('/newcollection', methods=['GET', 'POST'])
@@ -339,6 +379,28 @@ def deletecollection(colid):
         flash(' Payment records still exist for this collection!')
         return redirect(url_for('admincollection'))
 
+@app.route('/adminpayment', methods=['GET','POST'])
+@login_required
+def adminpayment():
+    form = AdminPayment()
+    if request.method=="POST" and form.validate_on_submit():
+        check = Member.query.filter_by(memberid=form.memberid.data).first()
+        print check
+        if check is None:
+            print 'xxxx'
+            flash(' Student does not exist!')
+            return render_template('adminpayment.html', form=form)
+        else:
+            query = Collection.query.filter_by(colname=str(form.colname.data)).first()
+            now = datetime.datetime.now()
+            db.session.add(Payments(Payments_colid=query.colid, Payments_memberid=form.memberid.data,
+                                    datepaid=now.strftime("%Y-%m-%d"), Payments_orgCode=current_user.orgCode))
+            db.session.commit()
+            flash(' Payment saved successfully!')
+            print 'zzzz'
+            return render_template('adminpayment.html', form=form)
+    return render_template('adminpayment.html', form=form)
+
 @app.route('/newpayment/<int:colid>', methods=['GET', 'POST'])
 @login_required
 def newpayment(colid):
@@ -356,12 +418,14 @@ def newpayment(colid):
             return redirect(url_for('admincollection'))
     return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
 
-@app.route('/viewpayment/<int:colid>', methods=['GET','POST'])
+
+
+@app.route('/viewpayment/<int:colid>/', methods=['GET','POST'])
 @login_required
 def viewpayment(colid):
-    q = db.session.query(Member.memberid, Member.fname, Member.lname, Payments.datepaid).outerjoin(Payments).filter_by(Payments_colid=colid).order_by(Member.lname)
+    query = db.session.query(Member.memberid, Member.fname, Member.lname, Payments.datepaid, Payments.Payments_colid).outerjoin(Payments).filter_by(Payments_colid=colid).order_by(Member.lname)
     collectname = Collection.query.filter_by(colid=colid).first()
-    return render_template('paytables.html', colid=colid, result=q, collectname=collectname)
+    return render_template('paytables.html', colid=colid, result=query, collectname=collectname)
 
 @app.route('/deletepayment/<int:colid>', methods=['GET', 'POST'])
 @login_required
@@ -371,21 +435,80 @@ def deletepayment(colid):
     flash(' Successfully deleted payment records!')
     return redirect(url_for('admincollection'))
 
-@app.route('/adminlogs')
+@app.route('/adminlogs/')
 @login_required
 def adminlogs():
-    return render_template('logs.html')
+    query = Logs.query.filter_by(orgCode=current_user.orgCode)
+    return render_template('logs.html', query=query)
+
+@app.route('/deactivate', methods=['GET', 'POST'])
+@login_required
+def deactivate():
+    form = Deactivator()
+    if request.method=='POST' and form.validate_on_submit():
+        query = User.query.filter_by(userid=current_user.userid).first()
+        if check_password_hash(query.password, form.password.data):
+            for row in Member.query.all():
+                row.status = 'INACTIVE'
+                db.session.add(row)
+            db.session.commit()
+            flash(' Members deactivated successfully!')
+            return redirect(url_for('adminmembers'))
+        else:
+            flash(' Incorrect password!')
+            return render_template('deactivate.html', form=form)
+    return render_template('deactivate.html', form=form)
+
+# @app.before_request
+# def make_session_permanent():
+#     session.permanent = True
+#     app.permanent_session_lifetime = timedelta(minutes=120)
 
 @app.route('/viewerlogin', methods=['GET','POST'])
 def viewerlogin():
     form = ViewLogin()
+    name = db.session.query(Organization.orgName).first()
     if request.method=='POST' and form.validate_on_submit():
-        pass
-    return render_template('viewlogin.html', form=form)
+        session.pop('user', None)
+        check = Member.query.filter_by(memberid=form.memberid.data).first()
+        if check is None:
+            flash('This ID is not registered yet!')
+            return render_template('viewlogin.html', form=form, name=name)
+        else:
+            now = datetime.datetime.now()
+            addis = Logs(idno=check.memberid, fname=check.fname, lname=check.lname, dnt=now.strftime("%Y-%m-%d %H:%M"), orgCode=check.orgCode)
+            db.session.add(addis)
+            db.session.commit()
+            session['user'] = check.fname
+            session['org'] = check.orgCode
+            session['memberid'] = check.memberid
+            return redirect(url_for('viewhome'))
+    return render_template('viewlogin.html', form=form, name=name)
+
 
 @app.route('/viewhome', methods=['GET', 'POST'])
 def viewhome():
-    return "EMPTY"
+    form = ViewLogin()
+    if 'user' in session:
+        code = session['org']
+        return render_template("viewerhomepage.html", code=code)
+    else:
+        flash('Log in again to access this page')
+        return render_template('viewlogin.html', form=form)
+
+@app.route('/viewbudgets', methods=['GET', 'POST']) #CURRENTLY WORKING ON: PASSING DATA FROM SESSIONS
+def viewbudgets():
+    return render_template("viewer_budgets.html")
+
+
+@app.route('/viewlogout', methods=['GET', 'POST'])
+def viewlogout():
+    session.pop('user', None)
+    session.pop('org', None)
+    form = ViewLogin()
+    return render_template('viewlogin.html', form=form)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

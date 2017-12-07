@@ -23,7 +23,7 @@ Sign In/Sign Out
         {{ wtf.form_field(form.attendtype) }}
     </dl>
     <input class="btn btn-success" type="submit" value="Confirm">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
     </div>
     {% with msg = get_flashed_messages() %}

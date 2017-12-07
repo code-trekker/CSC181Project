@@ -1,12 +1,23 @@
 import datetime as datetime
 from flask_wtf import FlaskForm
 from wtforms import *
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import *
 from wtforms.fields.html5 import DateField, DateTimeField
+from models import Courses, Event, Collection
+
+class AdminSetup(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(), Length(min=5, max=15, message="Invalid input")])
+    password = StringField('Password', validators=[InputRequired(), Length(min=8, max=15, message="Invalid input")])
+    orgName = StringField('Organization Name', validators=[InputRequired(), Length(min=8, message="Invalid input")])
+    orgCode = StringField('Organization Code', validators=[InputRequired(), Length(min=3, max=4, message='Invalid input')])
+    description = TextAreaField('Description', validators=[InputRequired(), Length(max=800, message="Exceeded max character count")])
+    courses = StringField('Courses', validators=[Length(min=0)])
+
 
 class LoginForm(FlaskForm):
-    userid = StringField('Username', validators=[InputRequired(), Length(min=8, max=9, message="Invalid input")])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=12, message=None)])
+    userid = StringField('Username', validators=[InputRequired(), Length(min=5, max=15, message="Invalid input")])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=15, message=None)])
 
 class ViewLogin(FlaskForm):
     memberid = IntegerField('Student ID', validators=[InputRequired()])
@@ -16,14 +27,7 @@ class NewMember(FlaskForm):
     fname = StringField('First Name', validators=[InputRequired(), Length(min=3, max=30, message="Must be at least 3 characters long")])
     mname = StringField('Middle Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
     lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
-    course = StringField('Course Name', validators=[InputRequired(), Length(min=10, max=30, message="Must be at least 10 characters long")])
-    orgCode= SelectField(u'Organization', choices=[('SCS', 'School of Computer Studies'),
-                                                   ('CBAA', 'College of Business Administration'),
-                                                   ('CSM', 'College of Science and Mathematics'),
-                                                   ('COET', 'College of Engineering Technology'),
-                                                   ('CASS', 'College of Arts and Social Sciences'),
-                                                   ('CON', 'College of Nursing'),
-                                                   ('CED', 'College of Education')], validators=[InputRequired()])
+    course = QuerySelectField('Type',query_factory=lambda: Courses.query,allow_blank=False)
 
 
 class NewBudget(FlaskForm):
@@ -41,7 +45,6 @@ class NewBudget(FlaskForm):
     budgetBal = DecimalField('Amount', validators=[InputRequired()], default=0)
 
 class NewEvent(FlaskForm):
-    eventid = IntegerField('Event ID', validators=[InputRequired()])
     eventName = StringField('Event Name', validators=[InputRequired(), Length(min=5,max=30, message='Invalid input')])
     eventDate = DateField('Event Date', format='%Y-%m-%d')
     allocation = DecimalField('Allocation', validators=[InputRequired()], default=0)
@@ -55,8 +58,7 @@ class DelEvent(FlaskForm):
     eventid = StringField('Event ID', validators=[InputRequired(), Length(min=4,max=4, message='Invalid event code')])
 
 class NewExpense(FlaskForm):
-    expid = IntegerField('ID', validators=[InputRequired()])
-    eid = StringField('Event Code', validators=[InputRequired(), Length(min=4, max=4, message='Invalid event code')])
+    eid = QuerySelectField('Events',query_factory=lambda: Event.query,allow_blank=False)
     amount = DecimalField('Amount', validators=[InputRequired()], default=0)
     date = DateField('Date Spent', format='%Y-%m-%d')
     orNo = StringField('OR Number', validators=[InputRequired(), Length(max=30, message='OR Number too long')])
@@ -87,3 +89,16 @@ class NewPayment(FlaskForm):
 class NewAttendance(FlaskForm):
     memberid = IntegerField('Student ID', validators=[InputRequired()])
     attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
+
+class AdminPayment(FlaskForm):
+    colname = QuerySelectField('Collections',query_factory=lambda: Collection.query,allow_blank=False)
+    memberid = IntegerField('Student ID', validators=[InputRequired()])
+    datetime = DateField('Date Paid', format='%Y-%m-%d')
+
+class AdminAttendance(FlaskForm):
+    ev_name = QuerySelectField('Events',query_factory=lambda: Event.query,allow_blank=False)
+    memberid = IntegerField('Student ID', validators=[InputRequired()])
+    attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
+
+class Deactivator(FlaskForm):
+    password = PasswordField('', validators=[InputRequired(), Length(min=8, max=15, message=None)])

@@ -39,7 +39,7 @@ Paid Students
             </tr>
         </thead>
         <tbody>
-        {% for res in query %}
+        {% for res in query.items %}
             <tr>
                 <td>{{ res.memberid }}</td>
                 <td>{{ res.lname }}</td>
@@ -52,4 +52,15 @@ Paid Students
     </table>
 </div>
 </div>
+    <div class="pages">
+    <ul class="pagination pagination-lg">
+        {% for page in query.iter_pages() %}
+            {% if page %}
+             <li class="page-item"><a class="pagenum" href="{{ url_for('adminevents', page_num=page) }}">{{ page }}</a></li>
+            {% else %}
+                ....
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

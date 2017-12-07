@@ -7,9 +7,11 @@ New Event
 
 {% block styles %}
     {{ super() }}
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link href="/static/events.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
+
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
@@ -20,13 +22,12 @@ New Event
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.eventid, placeholder="Pick a 4-digit code e.g., 0042") }}
         {{ wtf.form_field(form.eventName, placeholder="Name your event") }}
         {{ wtf.form_field(form.eventDate) }}
         {{ wtf.form_field(form.allocation, placeholder="Enter budget allocation") }}
     </dl>
     <input class="btn btn-success" type="submit" value="Create">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
+    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
 
     </div>
