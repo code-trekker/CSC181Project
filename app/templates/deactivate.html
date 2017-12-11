@@ -6,15 +6,21 @@ Deactivate
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link href="/static/budgets.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
+<ol class="breadcrumb" id="form-breadcrumbs">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item">Deactivate</li>
+</ol>
 
-    <div id="deactivate-confirm">
+    <div class="container">
+        <div class="wrapper">
+            <div class="form-signin">
+        <h3 class="form-signin-heading">Confirm Password</h3>
     <form class="form form-horizontal" action="{{ url_for('deactivate') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
@@ -22,11 +28,14 @@ Deactivate
         {{ wtf.form_field(form.password, placeholder="Enter password") }}
     </dl>
     <div id="deactivate-buttons">
-        <input class="btn btn-success" type="submit" value="De-Activate">
-        <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminhome'">
+        <input class="btn btn-success btn-block" type="submit" value="De-Activate">
+        <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='/adminhome'">
     </div>
     </form>
     </div>
+    </div>
+    </div>
+
     {% with msg = get_flashed_messages() %}
         {% if msg %}
         {% for alert in msg %}

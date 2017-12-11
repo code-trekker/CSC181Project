@@ -97,13 +97,13 @@
       <DataType>decimal(10,2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="36" parent="11" name="Organization_orgCode">
+    <column id="36" parent="11" name="Budget_orgCode">
       <Position>5</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
     <index id="37" parent="11" name="Organization_orgCode">
-      <ColNames>Organization_orgCode</ColNames>
+      <ColNames>Budget_orgCode</ColNames>
     </index>
     <key id="38" parent="11" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
@@ -111,7 +111,7 @@
       <Primary>1</Primary>
     </key>
     <foreign-key id="39" parent="11" name="budget_ibfk_1">
-      <ColNames>Organization_orgCode</ColNames>
+      <ColNames>Budget_orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
@@ -124,7 +124,7 @@
     </column>
     <column id="41" parent="12" name="colname">
       <Position>2</Position>
-      <DataType>varchar(20)|0</DataType>
+      <DataType>varchar(35)|0</DataType>
       <NotNull>1</NotNull>
     </column>
     <column id="42" parent="12" name="fee">
@@ -137,352 +137,367 @@
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="44" parent="12" name="Collection_orgCode">
+    <column id="44" parent="12" name="schoolyear">
+      <Position>5</Position>
+      <DataType>char(4)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="45" parent="12" name="amountcollected">
+      <Position>6</Position>
+      <DataType>decimal(10,2)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="46" parent="12" name="Collection_orgCode">
       <ColNames>Collection_orgCode</ColNames>
     </index>
-    <key id="45" parent="12" name="PRIMARY">
+    <key id="47" parent="12" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>colid</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="46" parent="12" name="collection_ibfk_1">
+    <foreign-key id="48" parent="12" name="collection_ibfk_1">
       <ColNames>Collection_orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
     </foreign-key>
-    <column id="47" parent="13" name="id">
+    <column id="49" parent="13" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="48" parent="13" name="coursename">
+    <column id="50" parent="13" name="coursename">
       <Position>2</Position>
       <DataType>varchar(40)|0</DataType>
     </column>
-    <key id="49" parent="13" name="PRIMARY">
+    <key id="51" parent="13" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="50" parent="14" name="eventid">
+    <column id="52" parent="14" name="eventid">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="51" parent="14" name="eventName">
+    <column id="53" parent="14" name="eventName">
       <Position>2</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="52" parent="14" name="eventDate">
+    <column id="54" parent="14" name="eventDate">
       <Position>3</Position>
       <DataType>varchar(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="53" parent="14" name="allocation">
+    <column id="55" parent="14" name="allocation">
       <Position>4</Position>
       <DataType>decimal(10,2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="54" parent="14" name="Event_orgCode">
+    <column id="56" parent="14" name="Event_orgCode">
       <Position>5</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="55" parent="14" name="eventName">
+    <column id="57" parent="14" name="schoolyear">
+      <Position>6</Position>
+      <DataType>char(4)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="58" parent="14" name="eventName">
       <ColNames>eventName</ColNames>
       <Unique>1</Unique>
     </index>
-    <index id="56" parent="14" name="Event_orgCode">
+    <index id="59" parent="14" name="Event_orgCode">
       <ColNames>Event_orgCode</ColNames>
     </index>
-    <key id="57" parent="14" name="PRIMARY">
+    <key id="60" parent="14" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>eventid</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="58" parent="14" name="eventName">
+    <key id="61" parent="14" name="eventName">
       <ColNames>eventName</ColNames>
       <UnderlyingIndexName>eventName</UnderlyingIndexName>
     </key>
-    <foreign-key id="59" parent="14" name="event_ibfk_1">
+    <foreign-key id="62" parent="14" name="event_ibfk_1">
       <ColNames>Event_orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
     </foreign-key>
-    <column id="60" parent="15" name="expid">
+    <column id="63" parent="15" name="expid">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="61" parent="15" name="Expenses_eventid">
+    <column id="64" parent="15" name="Expenses_eventid">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="62" parent="15" name="name">
+    <column id="65" parent="15" name="name">
       <Position>3</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="63" parent="15" name="amount">
+    <column id="66" parent="15" name="amount">
       <Position>4</Position>
       <DataType>decimal(10,2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="64" parent="15" name="date">
+    <column id="67" parent="15" name="date">
       <Position>5</Position>
       <DataType>varchar(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="65" parent="15" name="orNo">
+    <column id="68" parent="15" name="orNo">
       <Position>6</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="66" parent="15" name="Expenses_orgCode">
+    <column id="69" parent="15" name="Expenses_orgCode">
       <Position>7</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="67" parent="15" name="Expenses_eventid">
+    <index id="70" parent="15" name="Expenses_eventid">
       <ColNames>Expenses_eventid</ColNames>
     </index>
-    <index id="68" parent="15" name="Expenses_orgCode">
+    <index id="71" parent="15" name="Expenses_orgCode">
       <ColNames>Expenses_orgCode</ColNames>
     </index>
-    <key id="69" parent="15" name="PRIMARY">
+    <key id="72" parent="15" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>expid</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="70" parent="15" name="expenses_ibfk_1">
+    <foreign-key id="73" parent="15" name="expenses_ibfk_1">
       <ColNames>Expenses_eventid</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>event</RefTableName>
       <RefColNames>eventid</RefColNames>
     </foreign-key>
-    <foreign-key id="71" parent="15" name="expenses_ibfk_2">
+    <foreign-key id="74" parent="15" name="expenses_ibfk_2">
       <ColNames>Expenses_orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
     </foreign-key>
-    <column id="72" parent="16" name="i">
+    <column id="75" parent="16" name="i">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="73" parent="16" name="idno">
+    <column id="76" parent="16" name="idno">
       <Position>2</Position>
-      <DataType>varchar(8)|0</DataType>
+      <DataType>char(8)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="74" parent="16" name="fname">
+    <column id="77" parent="16" name="fname">
       <Position>3</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="75" parent="16" name="lname">
+    <column id="78" parent="16" name="lname">
       <Position>4</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="76" parent="16" name="dnt">
+    <column id="79" parent="16" name="dnt">
       <Position>5</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="77" parent="16" name="orgCode">
+    <column id="80" parent="16" name="orgCode">
       <Position>6</Position>
       <DataType>varchar(4)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="78" parent="16" name="orgCode">
+    <index id="81" parent="16" name="orgCode">
       <ColNames>orgCode</ColNames>
     </index>
-    <key id="79" parent="16" name="PRIMARY">
+    <key id="82" parent="16" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>i</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="80" parent="16" name="logs_ibfk_1">
+    <foreign-key id="83" parent="16" name="logs_ibfk_1">
       <ColNames>orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
     </foreign-key>
-    <column id="81" parent="17" name="memberid">
+    <column id="84" parent="17" name="memberid">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="82" parent="17" name="fname">
+    <column id="85" parent="17" name="fname">
       <Position>2</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="83" parent="17" name="mname">
+    <column id="86" parent="17" name="mname">
       <Position>3</Position>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="84" parent="17" name="lname">
+    <column id="87" parent="17" name="lname">
       <Position>4</Position>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="85" parent="17" name="course">
+    <column id="88" parent="17" name="course">
       <Position>5</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="86" parent="17" name="orgCode">
+    <column id="89" parent="17" name="orgCode">
       <Position>6</Position>
       <DataType>varchar(4)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="87" parent="17" name="status">
+    <column id="90" parent="17" name="status">
       <Position>7</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="88" parent="17" name="memberid">
+    <index id="91" parent="17" name="memberid">
       <ColNames>memberid</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="89" parent="17" name="PRIMARY">
+    <key id="92" parent="17" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>memberid</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="90" parent="17" name="memberid">
+    <key id="93" parent="17" name="memberid">
       <ColNames>memberid</ColNames>
       <UnderlyingIndexName>memberid</UnderlyingIndexName>
     </key>
-    <column id="91" parent="18" name="orgCode">
+    <column id="94" parent="18" name="orgCode">
       <Position>1</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="92" parent="18" name="orgName">
+    <column id="95" parent="18" name="orgName">
       <Position>2</Position>
       <DataType>varchar(70)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="93" parent="18" name="description">
+    <column id="96" parent="18" name="description">
       <Position>3</Position>
       <DataType>varchar(800)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="94" parent="18" name="orgName">
+    <index id="97" parent="18" name="orgName">
       <ColNames>orgName</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="95" parent="18" name="PRIMARY">
+    <key id="98" parent="18" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>orgCode</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="96" parent="18" name="orgName">
+    <key id="99" parent="18" name="orgName">
       <ColNames>orgName</ColNames>
       <UnderlyingIndexName>orgName</UnderlyingIndexName>
     </key>
-    <column id="97" parent="19" name="pid">
+    <column id="100" parent="19" name="pid">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="98" parent="19" name="Payments_colid">
+    <column id="101" parent="19" name="Payments_colid">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="99" parent="19" name="Payments_memberid">
+    <column id="102" parent="19" name="Payments_memberid">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="100" parent="19" name="datepaid">
+    <column id="103" parent="19" name="datepaid">
       <Position>4</Position>
-      <DataType>varchar(20)|0</DataType>
+      <DataType>char(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="101" parent="19" name="Payments_orgCode">
+    <column id="104" parent="19" name="Payments_orgCode">
       <Position>5</Position>
       <DataType>varchar(10)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="102" parent="19" name="Payments_colid">
+    <index id="105" parent="19" name="Payments_colid">
       <ColNames>Payments_colid</ColNames>
     </index>
-    <index id="103" parent="19" name="Payments_memberid">
+    <index id="106" parent="19" name="Payments_memberid">
       <ColNames>Payments_memberid</ColNames>
     </index>
-    <index id="104" parent="19" name="Payments_orgCode">
+    <index id="107" parent="19" name="Payments_orgCode">
       <ColNames>Payments_orgCode</ColNames>
     </index>
-    <key id="105" parent="19" name="PRIMARY">
+    <key id="108" parent="19" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>pid</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="106" parent="19" name="payments_ibfk_1">
+    <foreign-key id="109" parent="19" name="payments_ibfk_1">
       <ColNames>Payments_colid</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>collection</RefTableName>
       <RefColNames>colid</RefColNames>
     </foreign-key>
-    <foreign-key id="107" parent="19" name="payments_ibfk_2">
+    <foreign-key id="110" parent="19" name="payments_ibfk_2">
       <ColNames>Payments_memberid</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>member</RefTableName>
       <RefColNames>memberid</RefColNames>
     </foreign-key>
-    <foreign-key id="108" parent="19" name="payments_ibfk_3">
+    <foreign-key id="111" parent="19" name="payments_ibfk_3">
       <ColNames>Payments_orgCode</ColNames>
       <RefSchemaName>flaskapp</RefSchemaName>
       <RefTableName>organization</RefTableName>
       <RefColNames>orgCode</RefColNames>
     </foreign-key>
-    <column id="109" parent="20" name="id">
+    <column id="112" parent="20" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="110" parent="20" name="userid">
+    <column id="113" parent="20" name="userid">
       <Position>2</Position>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="111" parent="20" name="password">
+    <column id="114" parent="20" name="password">
       <Position>3</Position>
       <DataType>varchar(100)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="112" parent="20" name="orgCode">
+    <column id="115" parent="20" name="orgCode">
       <Position>4</Position>
       <DataType>varchar(5)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="113" parent="20" name="userid">
+    <index id="116" parent="20" name="userid">
       <ColNames>userid</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="114" parent="20" name="PRIMARY">
+    <key id="117" parent="20" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="115" parent="20" name="userid">
+    <key id="118" parent="20" name="userid">
       <ColNames>userid</ColNames>
       <UnderlyingIndexName>userid</UnderlyingIndexName>
     </key>

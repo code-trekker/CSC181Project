@@ -71,15 +71,19 @@ class Organization(db.Model):
 
 class Collection(db.Model):
     colid = db.Column(db.Integer(), primary_key=True)
-    colname = db.Column(db.String(20), nullable=False)
+    colname = db.Column(db.String(35), nullable=False)
     fee = db.Column(db.DECIMAL(10, 2), nullable=False)
+    amountcollected = db.Column(db.DECIMAL(10,2), nullable=False)
     Collection_orgCode=db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
+    schoolyear = db.Column(db.CHAR(4), nullable=False)
     pays = db.relationship('Payments', backref='collection', lazy=True)
 
-    def __init__(self, colname, fee, Collection_orgCode):
+    def __init__(self, colname, fee, amountcollected, Collection_orgCode, schoolyear):
         self.colname=colname
         self.fee=fee
+        self.amountcollected = amountcollected
         self.Collection_orgCode=Collection_orgCode
+        self.schoolyear=schoolyear
 
     def __repr__(self):
         return "%s" % (self.colname)
@@ -88,7 +92,7 @@ class Payments(db.Model):
     pid = db.Column(db.Integer(), primary_key=True)
     Payments_colid = db.Column(Integer(11), db.ForeignKey('collection.colid'), nullable=False)
     Payments_memberid = db.Column(Integer(11), db.ForeignKey('member.memberid'), nullable=False)
-    datepaid = db.Column(db.String(20), nullable=False)
+    datepaid = db.Column(db.CHAR(10), nullable=False)
     Payments_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
     def __init__(self, Payments_colid, Payments_memberid, datepaid, Payments_orgCode):
@@ -105,13 +109,13 @@ class Budget(db.Model):
     schoolyear = db.Column(db.String(20), unique=False, nullable=False)
     semester = db.Column(db.String(8), unique=False, nullable=False)
     budgetBal = db.Column(db.DECIMAL(10,2), unique=False, nullable=False)
-    Organization_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
+    Budget_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
-    def __init__(self, schoolyear, semester, budgetBal, Organization_orgCode):
+    def __init__(self, schoolyear, semester, budgetBal, Budget_orgCode):
         self.schoolyear=schoolyear
         self.semester=semester
         self.budgetBal=budgetBal
-        self.Organization_orgCode=Organization_orgCode
+        self.Budget_orgCode=Budget_orgCode
 
     def __repr__(self):
         return '<Budget %r>' % self.Organization_orgCode
@@ -121,15 +125,17 @@ class Event(db.Model):
     eventName = db.Column(db.String(30), unique=True, nullable=False)
     eventDate = db.Column(db.String(11), nullable=False)
     allocation = db.Column(db.DECIMAL(10,2), nullable=False)
-    Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode', onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
+    Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
+    schoolyear = db.Column(db.CHAR(4), nullable=False)
     expense = db.relationship('Expenses',cascade='all,delete-orphan', backref=db.backref('expenses', cascade="all"), lazy=True, single_parent=True)
     attendance = db.relationship('Attendance', backref='event', lazy=True)
 
-    def __init__(self, eventName, eventDate, allocation, Event_orgCode):
+    def __init__(self, eventName, eventDate, allocation, Event_orgCode, schoolyear):
         self.eventName = eventName
         self.eventDate = eventDate
         self.allocation = allocation
         self.Event_orgCode = Event_orgCode
+        self.schoolyear=schoolyear
 
     def __repr__(self):
         return "%s" % (self.eventName)
@@ -175,7 +181,7 @@ class Attendance(db.Model):
 
 class Logs(db.Model):
     i = db.Column(db.Integer, primary_key=True)
-    idno = db.Column(db.String(8), nullable=False)
+    idno = db.Column(db.CHAR(8), nullable=False)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)
     dnt = db.Column(db.String(30), nullable=False)

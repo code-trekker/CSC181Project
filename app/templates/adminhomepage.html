@@ -2,7 +2,6 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 
-
 {% block title %}
 Admin Home
 {% endblock %}
@@ -43,7 +42,7 @@ Admin Home
 </div>
 
 <div id="main"><br><br><br>
-    <h1 style="font-family: sans-serif; text-align: center;" id="adminmsg">{{ msgs }}</h1>
+    <h1 style="font-family: sans-serif; text-align: center;" id="adminmsg">{{ msgs }}<br>Welcome to the admin homepage!</h1>
 <div id="quickbois">
     <a id="make-payment" class="btn btn-primary" href="/adminpayment"><span><i class="glyphicon glyphicon-piggy-bank" style="margin-right:0.5em"></i><br>Make a payment</span></a>
     <a id="add-event" class="btn btn-primary" href="/newevent"><span><i class="glyphicon glyphicon-calendar" style="margin-right:0.5em"></i><br>Add an event</span></a>
@@ -53,7 +52,9 @@ Admin Home
     <a id="deactivate-students" class="btn btn-primary" href="/deactivate"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i><br>Deactivate students</span></a>
 </div>
 
+
 </div>
+
 
 
 {% endblock %}

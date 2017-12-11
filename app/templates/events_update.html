@@ -6,17 +6,24 @@ Update Event
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link href="/static/events.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
-<h1>Update Event</h1>
-        <h3> {{ msgs }} </h3>
-    <div class="input-event">
+
+<ol class="breadcrumb" id="form-breadcrumbs">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>
+    <li class="breadcrumb-item">Update Event Info</li>
+</ol>
+
+    <div class="container">
+    <div class="wrapper">
+    <div class="form-signin">
+        <h3 class="form-signin-heading">Update Record Info</h3>
     <form class="form form-horizontal" action="{{ url_for('updateevent', eventid=eventid) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
@@ -25,10 +32,12 @@ Update Event
         {{ wtf.form_field(form.eventDate) }}
         {{ wtf.form_field(form.allocation, placeholder="Enter new budget allocation") }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Update">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
+    <input class="btn btn-success btn-block" type="submit" value="Update">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
 
+    </div>
+    </div>
     </div>
     {% endwith %}
 {% endblock %}

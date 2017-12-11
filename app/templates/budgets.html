@@ -6,7 +6,6 @@ Budgets
 {% endblock %}
 {% block styles %}
     <link href="/static/bootstrap1.css" rel="stylesheet">
-    {{ super() }}
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
@@ -45,10 +44,15 @@ Budgets
 </ul>
 </div>
 
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item">Budgets</li>
+</ol>
+
 <div id="main"><br><br><br>
   <h1 style="font-family: sans-serif">Budgets</h1>
 </div>
-
+<div id="tables">
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -67,7 +71,7 @@ Budgets
         {% endfor %}
         </tbody>
     </table>
-
+</div>
 
 <a class="btn btn-primary" id="budgetlinks" href="/newbudget">Add New Budget</a>
 <a class="btn btn-primary" id="budgetlinks" href="/updatebudget">Update Existing Budget</a>

@@ -96,14 +96,14 @@ def logout():
 @app.route('/adminhome')
 @login_required
 def adminhome():
-    msgs = 'Hello there, ' + str(current_user.userid) + '! Welcome to the admin homepage!'
+    msgs = 'Hello there, ' + str(current_user.userid) + '!'
     return render_template('adminhomepage.html', msgs=msgs)
 
 
 @app.route('/adminbudgets/')
 @login_required
 def adminbudgets():
-    query = Budget.query.filter_by(Organization_orgCode=current_user.orgCode).order_by(Budget.schoolyear)
+    query = Budget.query.filter_by(Budget_orgCode=current_user.orgCode).order_by(Budget.schoolyear)
     return render_template('budgets.html', query=query)
 
 @app.route('/newbudget', methods=['GET', 'POST'])
@@ -114,7 +114,7 @@ def newbudget():
     if request.method=='POST' and form.validate_on_submit():
         check = Budget.query.filter_by(schoolyear=form.schoolyear.data, semester=form.semester.data).first()
         if check is None:
-            db.session.add(Budget(schoolyear=form.schoolyear.data, semester=form.semester.data, budgetBal=form.budgetBal.data, Organization_orgCode=current_user.orgCode))
+            db.session.add(Budget(schoolyear=form.schoolyear.data, semester=form.semester.data, budgetBal=form.budgetBal.data, Budget_orgCode=current_user.orgCode))
             db.session.commit()
             return redirect(url_for('adminbudgets'))
         elif check.schoolyear == form.schoolyear.data and check.semester == form.semester.data:
@@ -142,20 +142,22 @@ def updatebudget():
 @app.route('/adminevents/', methods=['GET', 'POST'])
 @login_required
 def adminevents():
-    query = Event.query.filter_by(Event_orgCode=current_user.orgCode).order_by(Event.eventDate)
+    now = datetime.datetime.now()
+    query = Event.query.filter(Event.schoolyear >= now.year).order_by(Event.eventDate)
     return render_template('events.html', query=query)
 
 @app.route('/newevent', methods=['GET','POST']) #DONE
 @login_required
 def newevent():
     form = NewEvent()
-    msgs = ''
+    now = datetime.datetime.now()
     if request.method=='POST' and form.validate_on_submit():
-        db.session.add(Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data, Event_orgCode=current_user.orgCode))
+        db.session.add(Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data,
+                             Event_orgCode=current_user.orgCode, schoolyear=now.year))
         db.session.commit()
         flash(" Success! You have added a new event!")
         return redirect(url_for('adminevents'))
-    return render_template('events_new.html', form=form, msgs=msgs)
+    return render_template('events_new.html', form=form)
 
 @app.route('/updateevent/<int:eventid>', methods=['GET', 'POST'])
 def updateevent(eventid):
@@ -257,32 +259,18 @@ def newattendance(eventid, eventdate):
                 return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
     return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
 
-@app.route('/attendancelist/<int:eventid>/<int:page_num>')
+@app.route('/attendancelist/<int:eventid>/')
 @login_required
-def attendancelist(eventid, page_num):
+def attendancelist(eventid):
     check = Event.query.filter_by(eventid=eventid).first()
     query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid, Member.fname, Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
-    def paginate(query, page, per_page=10, error_out=True): #had to add this to bypass strict rules about paginating a query object LMAO
-        if error_out and page < 1:
-            abort(404)
-        items = query.limit(per_page).offset((page - 1) * per_page).all()
-        if not items and page != 1 and error_out:
-            abort(404)
-        # No need to count if we're on the first page and there are fewer
-        # items than we expected.
-        if page == 1 and len(items) < per_page:
-            total = len(items)
-        else:
-            total = query.order_by(None).count()
-
-        return Pagination(query, page, per_page, total, items)
-    q = paginate(query,page_num)
-    return render_template('attendance_list.html', eventid=eventid, query=q, check=check)
+    return render_template('attendance_list.html', eventid=eventid, query=query, check=check)
 
 @app.route('/adminexpenses/')
 @login_required
 def adminexpenses():
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter_by(Event_orgCode=current_user.orgCode)
+    now = datetime.datetime.now()
+    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter(Event.schoolyear >= now.year)
     return render_template('expenses.html', query=query)
 
 @app.route('/newexpense', methods=['GET', 'POST'])
@@ -338,15 +326,17 @@ def adminmembers():
 @app.route('/admincollection/', methods=['GET', 'POST'])
 @login_required
 def admincollection():
-    query = Collection.query.filter_by(Collection_orgCode = current_user.orgCode).order_by(Collection.colid)
+    now = datetime.datetime.now()
+    query = Collection.query.filter(Collection.schoolyear >= now.year).order_by(Collection.colid) #reference
     return render_template('collection.html', query=query)
 
 @app.route('/newcollection', methods=['GET', 'POST'])
 @login_required
 def newcollection():
     form = NewCollection()
+    now = datetime.datetime.now()
     if request.method == 'POST' and form.validate_on_submit():
-        db.session.add(Collection(colname=form.colname.data, fee = form.fee.data, Collection_orgCode=current_user.orgCode))
+        db.session.add(Collection(colname=form.colname.data, fee = form.fee.data, Collection_orgCode=current_user.orgCode, schoolyear=now.year, amountcollected=0))
         db.session.commit()
         flash(' Collection added successfully!')
         return redirect(url_for('admincollection'))
@@ -413,11 +403,12 @@ def newpayment(colid):
             return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
         else:
             db.session.add(Payments(Payments_colid=colid, Payments_memberid=form.memberid.data, datepaid=form.datetime.data, Payments_orgCode=current_user.orgCode))
+            increment = Collection.query.filter_by(colid=colid).first()
+            increment.amountcollected += increment.fee
             db.session.commit()
             flash(' Payment saved successfully!')
             return redirect(url_for('admincollection'))
     return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
-
 
 
 @app.route('/viewpayment/<int:colid>/', methods=['GET','POST'])
