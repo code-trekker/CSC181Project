@@ -42,3 +42,9 @@ body {
     margin-top: 2%;
 }
 
+.alert {
+    width: 550px;
+    position: relative;
+    margin-left: 65%;
+    margin-top: 3%;
+}

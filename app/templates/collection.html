@@ -58,8 +58,6 @@ Collection
             <div class="messages">
             <div class="col-sm-6 col-md-6">
             <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                    ×</button>
                 <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
 
             </div>
@@ -88,7 +86,7 @@ Collection
                 <td><a class="btn btn-outline-primary" href="{{ url_for('updatecollection', colid=collect.colid) }}"><i class="glyphicon glyphicon-file"></i>Edit</a>
                     <a class="btn btn-outline-primary" href="{{ url_for('deletecollection', colid=collect.colid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a>
                     <a class="btn btn-outline-primary" href="{{ url_for('newpayment', colid=collect.colid) }}"><i class="glyphicon glyphicon-tag"></i>Make Payment</a>
-                    <a class="btn btn-outline-primary" href="{{ url_for('viewpayment', colid=collect.colid, page_num=1) }}"><i class="glyphicon glyphicon-list"></i>Details</a>
+                    <a class="btn btn-outline-primary" href="{{ url_for('viewpayment', colid=collect.colid) }}"><i class="glyphicon glyphicon-list"></i>Details</a>
                 </td>
 
             </tr>
@@ -99,7 +97,7 @@ Collection
 
 <div id="collections">
     <a class="btn btn-primary" href="/newcollection">Add A Collection</a>
-    <a class="btn btn-primary" href="#pastcollections">Past Collections</a>
+    <a class="btn btn-primary" href="/pastcollection">Past Collections</a>
 </div>
 
 

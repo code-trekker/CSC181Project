@@ -21,7 +21,6 @@ New Payment
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
                     ×</button>
                 <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
-
             </div>
         </div>
         </div>
@@ -38,6 +37,7 @@ New Payment
     <div class="wrapper">
     <div class="form-signin">
         <h3 class="form-signin-heading">New Payment</h3>
+        <h6 style="font-style: italic; text-align: center">{{ msgs }}</h6>
     <form class="form form-horizontal" action="{{ url_for('newpayment', colid=colid) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}

@@ -34,7 +34,8 @@ Paid Students
 <ol class="breadcrumb" id="payment-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
     <li class="breadcrumb-item"><a href="/admincollection">Collections</a></li>
-    <li class="breadcrumb-item">Payment Info</li>
+    <li class="breadcrumb-item"><a href="/pastcollection">Past Collection Records</a></li>
+    <li class="breadcrumb-item">Past Payment Info</li>
 </ol>
 
 <h1 style="font-family: sans-serif; margin-top: 5.2%">Payments for: {{ collectname.colname }}</h1>
@@ -58,7 +59,6 @@ Paid Students
                 <th>Last Name</th>
                 <th>First Name</th>
                 <th>Date Paid</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -68,7 +68,6 @@ Paid Students
                 <td>{{ res.lname }}</td>
                 <td>{{ res.fname }}</td>
                 <td>{{ res.datepaid }}</td>
-                <td><a class="btn btn-outline-primary" href="{{ url_for('deletepayment', pid=res.pid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a></td>
             </tr>
         {% endfor %}
         </tbody>

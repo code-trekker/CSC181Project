@@ -38,7 +38,7 @@ def setup():
             list = form.courses.data
             print form.courses.data
             def commaSep(list):
-                new_list = re.split(', |,',list)
+                new_list = re.split(', |,| ,',list)
                 for data in new_list:
                     db.session.add(Courses(coursename=data))
             commaSep(list)
@@ -69,6 +69,9 @@ def viewreg():
                 return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
         return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
 
+@app.route('/about', methods=['GET','POST'])
+def about():
+    return render_template('roundabout.html')
 
 @app.route('/admin', methods=['GET', 'POST'])
 def login():
@@ -145,6 +148,15 @@ def adminevents():
     now = datetime.datetime.now()
     query = Event.query.filter(Event.schoolyear >= now.year).order_by(Event.eventDate)
     return render_template('events.html', query=query)
+
+@app.route('/pastevents', methods=['GET', 'POST'])
+@login_required
+def pastevents():
+    now = datetime.datetime.now()
+    query = Event.query.filter(Event.schoolyear < now.year).order_by(Event.eventDate)
+    link1 = '/adminhome'
+    link2 = '/adminevents'
+    return render_template('events_past.html', query=query, link1=link1, link2=link2)
 
 @app.route('/newevent', methods=['GET','POST']) #DONE
 @login_required
@@ -233,8 +245,13 @@ def adminattendance():
 @login_required
 def newattendance(eventid, eventdate):
     form = NewAttendance()
+    msgs = ""
     if request.method=='POST' and form.validate_on_submit():
         check = Attendance.query.filter_by(memberid=form.memberid.data, eventid=eventid).first()
+        query = Member.query.filter_by(memberid=form.memberid.data).first()
+        if query is None:
+            msgs = 'Student does not exist!'
+            return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
         if check is None:
             if form.attendtype.data=='IN':
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=eventid, date=eventdate, signin=form.attendtype.data, signout=None))
@@ -245,33 +262,51 @@ def newattendance(eventid, eventdate):
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=eventid, date=eventdate, signin=None, signout=form.attendtype.data))
                 db.session.commit()
                 flash(' Student recorded successfully!')
-                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
+                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
         elif check.memberid == form.memberid.data and check.eventid==eventid:
             if form.attendtype.data == 'IN':
                 check.signin = form.attendtype.data
                 db.session.commit()
                 flash(' Student recorded successfully!')
-                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
+                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
             if form.attendtype.data == 'OUT':
                 check.signout = form.attendtype.data
                 db.session.commit()
                 flash(' Student recorded successfully!')
-                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
-    return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate)
+                return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
+    return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
 
 @app.route('/attendancelist/<int:eventid>/')
 @login_required
 def attendancelist(eventid):
     check = Event.query.filter_by(eventid=eventid).first()
     query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid, Member.fname, Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
+
     return render_template('attendance_list.html', eventid=eventid, query=query, check=check)
 
+@app.route('/pastattendance/<int:eventid>')
+@login_required
+def pastattendance(eventid):
+    check = Event.query.filter_by(eventid=eventid).first()
+    query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid, Member.fname,
+                             Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
+    return render_template('attendance_list_past.html', eventid=eventid, query=query, check=check)
 @app.route('/adminexpenses/')
 @login_required
 def adminexpenses():
     now = datetime.datetime.now()
     query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter(Event.schoolyear >= now.year)
     return render_template('expenses.html', query=query)
+
+@app.route('/pastexpenses')
+@login_required
+def pastexpenses():
+    now = datetime.datetime.now()
+    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < now.year)
+    link1 = '/adminhome'
+    link2 = '/adminexpenses'
+    return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
 
 @app.route('/newexpense', methods=['GET', 'POST'])
 @login_required
@@ -329,6 +364,14 @@ def admincollection():
     now = datetime.datetime.now()
     query = Collection.query.filter(Collection.schoolyear >= now.year).order_by(Collection.colid) #reference
     return render_template('collection.html', query=query)
+
+@app.route('/pastcollection')
+@login_required
+def pastcollection():
+    now = datetime.datetime.now()
+    query = Collection.query.filter(Collection.schoolyear < now.year).order_by(Collection.schoolyear)  # reference
+    return render_template('collection_past.html', query=query)
+
 
 @app.route('/newcollection', methods=['GET', 'POST'])
 @login_required
@@ -414,17 +457,28 @@ def newpayment(colid):
 @app.route('/viewpayment/<int:colid>/', methods=['GET','POST'])
 @login_required
 def viewpayment(colid):
-    query = db.session.query(Member.memberid, Member.fname, Member.lname, Payments.datepaid, Payments.Payments_colid).outerjoin(Payments).filter_by(Payments_colid=colid).order_by(Member.lname)
+    query = db.session.query(Member.memberid, Member.fname, Member.lname, Payments.datepaid, Payments.Payments_colid, Payments.pid).outerjoin(Payments).filter_by(Payments_colid=colid).order_by(Member.lname)
     collectname = Collection.query.filter_by(colid=colid).first()
     return render_template('paytables.html', colid=colid, result=query, collectname=collectname)
 
-@app.route('/deletepayment/<int:colid>', methods=['GET', 'POST'])
+@app.route('/pastpayment/<int:colid>', methods=['GET', 'POST'])
 @login_required
-def deletepayment(colid):
-    Payments.query.filter_by(Payments_colid=colid).delete()
+def pastpayment(colid):
+    query = db.session.query(Member.memberid, Member.fname, Member.lname, Payments.datepaid, Payments.Payments_colid,
+                             Payments.pid).outerjoin(Payments).filter_by(Payments_colid=colid).order_by(Member.lname)
+    collectname = Collection.query.filter_by(colid=colid).first()
+    return render_template('payment_past.html', colid=colid, result=query, collectname=collectname)
+
+
+@app.route('/deletepayment/<int:pid>', methods=['GET', 'POST'])
+@login_required
+def deletepayment(pid):
+    query = Payments.query.filter_by(pid=pid).first()
+    Payments.query.filter_by(pid=pid).delete()
     db.session.commit()
-    flash(' Successfully deleted payment records!')
-    return redirect(url_for('admincollection'))
+    flash(' Successfully removed!')
+    return redirect(url_for('viewpayment', colid=query.Payments_colid)) #<---- WORK ON THIS!
+
 
 @app.route('/adminlogs/')
 @login_required
@@ -450,10 +504,10 @@ def deactivate():
             return render_template('deactivate.html', form=form)
     return render_template('deactivate.html', form=form)
 
-# @app.before_request
-# def make_session_permanent():
-#     session.permanent = True
-#     app.permanent_session_lifetime = timedelta(minutes=120)
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=120)
 
 @app.route('/viewerlogin', methods=['GET','POST'])
 def viewerlogin():
@@ -471,25 +525,62 @@ def viewerlogin():
             db.session.add(addis)
             db.session.commit()
             session['user'] = check.fname
-            session['org'] = check.orgCode
             session['memberid'] = check.memberid
+            session['themeid'] = check.themeid
             return redirect(url_for('viewhome'))
     return render_template('viewlogin.html', form=form, name=name)
 
+
+@app.route('/swaptheme/<int:themeid>', methods=['GET', 'POST'])
+def swaptheme(themeid):
+    member = Member.query.filter_by(memberid=session['memberid']).first()
+    print(session['memberid'])
+    member.themeid = themeid
+    db.session.commit()
+    session['themeid'] = themeid
+    return "hahahah"
 
 @app.route('/viewhome', methods=['GET', 'POST'])
 def viewhome():
     form = ViewLogin()
     if 'user' in session:
-        code = session['org']
-        return render_template("viewerhomepage.html", code=code)
+        return render_template("viewerhomepage.html")
     else:
         flash('Log in again to access this page')
         return render_template('viewlogin.html', form=form)
 
-@app.route('/viewbudgets', methods=['GET', 'POST']) #CURRENTLY WORKING ON: PASSING DATA FROM SESSIONS
+@app.route('/viewbudgets', methods=['GET', 'POST'])
 def viewbudgets():
-    return render_template("viewer_budgets.html")
+    query = Budget.query.filter().order_by(Budget.schoolyear)
+    return render_template("viewer_budgets.html", query=query)
+
+@app.route('/viewexpenses', methods=['GET', 'POST'])
+def viewexpenses():
+    now = datetime.datetime.now()
+    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear >= now.year)
+    return render_template('viewer_expenses.html', query=query)
+
+@app.route('/viewpastexpenses', methods=['GET','POST'])
+def viewpastexpenses():
+    now = datetime.datetime.now()
+    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < now.year)
+    link1 = '/viewhome'
+    link2 = '/viewexpenses'
+    return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
+
+@app.route('/viewevent', methods=['GET','POST'])
+def viewevents():
+    now = datetime.datetime.now()
+    query = Event.query.filter(Event.schoolyear >= now.year).order_by(Event.eventDate)
+    return render_template('viewer_events.html', query=query)
+
+@app.route('/viewpastevent', methods=['GET','POST'])
+def viewpastevent():
+    now = datetime.datetime.now()
+    query = Event.query.filter(Event.schoolyear < now.year).order_by(Event.eventDate)
+    return render_template('viewer_events_past.html', query=query)
 
 
 @app.route('/viewlogout', methods=['GET', 'POST'])
@@ -497,7 +588,7 @@ def viewlogout():
     session.pop('user', None)
     session.pop('org', None)
     form = ViewLogin()
-    return render_template('viewlogin.html', form=form)
+    return redirect(url_for('viewerlogin'))
 
 
 

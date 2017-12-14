@@ -22,6 +22,7 @@ Sign In/Sign Out
         <div class="wrapper">
             <div class="form-signin">
         <h3 class="form-signin-heading">Take Attendance</h3>
+        <h6 style="text-align: center; font-style: italic">{{ msgs }}</h6>
     <form class="form form-horizontal" action="{{ url_for('newattendance', eventid=eventid, eventdate=eventdate) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}

@@ -27,18 +27,30 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return str(self.id)
 
+class Themes(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, unique=True, autoincrement=True)
+    theme = db.Column(db.String(32), nullable=False)
+    def __init__(self, id, theme):
+        self.id=id
+        self.theme=theme
+
+    def __repr__(self):
+        return '<Themes %r>' % self.id
+
+
 class Member(db.Model):
     memberid = db.Column(db.Integer(), primary_key=True, unique=True, autoincrement=False)
     fname = db.Column(db.String(30), nullable=False)
     mname = db.Column(db.String(20), nullable=False)
     lname = db.Column(db.String(20), nullable=False)
-    course = db.Column(db.String(50), nullable=False)
+    course = db.Column(db.String(50), nullable=True)
     orgCode = db.Column(db.String(4), nullable=False)
     status = db.Column(db.String(10), nullable=False)
     payment = db.relationship('Payments', backref='member', lazy=True)
     attends = db.relationship('Attendance', backref='member', lazy=True)
+    themeid = db.Column(db.Integer(), db.ForeignKey('themes.id'), default=0)
 
-    def __init__(self, memberid, fname, mname, lname, course, orgCode, status):
+    def __init__(self, memberid, fname, mname, lname, course, orgCode, status, themeid):
         self.memberid=memberid
         self.fname=fname
         self.mname=mname
@@ -46,6 +58,7 @@ class Member(db.Model):
         self.course=course
         self.status=status
         self.orgCode=orgCode
+        self.themeid=themeid
 
     def __repr__(self):
         return '<Member %r>' % self.fname
@@ -123,7 +136,7 @@ class Budget(db.Model):
 class Event(db.Model):
     eventid = db.Column(db.Integer(), primary_key=True)
     eventName = db.Column(db.String(30), unique=True, nullable=False)
-    eventDate = db.Column(db.String(11), nullable=False)
+    eventDate = db.Column(db.CHAR(10), nullable=False)
     allocation = db.Column(db.DECIMAL(10,2), nullable=False)
     Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
     schoolyear = db.Column(db.CHAR(4), nullable=False)
@@ -145,7 +158,7 @@ class Expenses(db.Model):
     Expenses_eventid = db.Column(db.Integer(), db.ForeignKey('event.eventid'), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.DECIMAL(10,2), nullable=False)
-    date = db.Column(db.String(11), nullable=False)
+    date = db.Column(db.CHAR(10), nullable=False)
     orNo = db.Column(db.String(30), nullable=False)
     Expenses_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
@@ -164,9 +177,9 @@ class Attendance(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     memberid = db.Column(Integer(8), db.ForeignKey('member.memberid'), nullable=False, unique=False)
     eventid = db.Column(db.Integer(), db.ForeignKey('event.eventid'), nullable=False)
-    date = db.Column(db.String(20), nullable=False)
-    signin = db.Column(db.String(5), nullable=True)
-    signout = db.Column(db.String(5), nullable=True)
+    date = db.Column(db.CHAR(10), nullable=False)
+    signin = db.Column(db.CHAR(5), nullable=True)
+    signout = db.Column(db.CHAR(5), nullable=True)
 
     def __init__(self, memberid, eventid, date, signin, signout):
         self.memberid=memberid
@@ -203,3 +216,5 @@ class Courses(db.Model):
 
     def __repr__(self):
         return "%s" % (self.coursename)
+
+

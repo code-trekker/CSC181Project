@@ -85,7 +85,7 @@ Events
                 <td><a class="btn btn-outline-primary" href="{{ url_for('updateevent', eventid=event.eventid) }}"><i class="glyphicon glyphicon-file"></i>Edit</a>
                 <a class="btn btn-outline-primary" href="{{ url_for('deleteevent', eventid=event.eventid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a>
                 <a class="btn btn-outline-primary" href="{{ url_for('newattendance', eventid=event.eventid, eventdate=event.eventDate) }}"><i class="glyphicon glyphicon-copy"></i>Take Attendance</a>
-                <a class="btn btn-outline-primary" href="{{ url_for('attendancelist', eventid=event.eventid, page_num=1) }}"><i class="glyphicon glyphicon-list"></i>Details</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('attendancelist', eventid=event.eventid) }}"><i class="glyphicon glyphicon-list"></i>Details</a>
                 </td>
             </tr>
         {% endfor %}
@@ -94,8 +94,9 @@ Events
 </div>
 </div>
 
-<div class="events">
-<a class="btn btn-primary" href="/newevent">Create Event</a>
+<div id="events">
+    <a class="btn btn-primary" href="/newevent">Create Event</a>
+    <a class="btn btn-primary" href="/pastevents">Past Events</a>
 </div>
 
 {% endwith %}

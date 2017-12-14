@@ -2,13 +2,11 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Paid Students
+Attendance: {{ check.eventName }}
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="/static/bootstrap1.css">
-    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/mainstyle.css">
-{#    <link rel="stylesheet" href="/static/dataTables.bootstrap4.min.css">#}
     <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
@@ -26,30 +24,22 @@ Paid Students
     <script>
         $(document).ready(function() {
             $('#example').DataTable();
-        } );
+            } );
     </script>
 {% endblock %}
 
 {% block content %}
+
 <ol class="breadcrumb" id="payment-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
-    <li class="breadcrumb-item"><a href="/admincollection">Collections</a></li>
-    <li class="breadcrumb-item">Payment Info</li>
+    <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>
+    <li class="breadcrumb-item"><a href="/pastevents">Past Events</a></li>
+    <li class="breadcrumb-item">Past Attendance Info</li>
 </ol>
 
-<h1 style="font-family: sans-serif; margin-top: 5.2%">Payments for: {{ collectname.colname }}</h1>
-{% with msg = get_flashed_messages() %}
-    {% if msg %}
-        {% for alert in msg %}
-            <div class="messages">
-            <div class="col-sm-6 col-md-6">
-            <div class="alert alert-info">
-                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
-            </div>
-            </div>
-            </div>
-        {% endfor %}
-    {% endif %}
+<div id="main"><br><br><br>
+  <h1 style="font-family: sans-serif">Attendance for: {{ check.eventName }}</h1>
+
 <div id="tables">
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead class="collection">
@@ -57,23 +47,24 @@ Paid Students
                 <th>Student ID</th>
                 <th>Last Name</th>
                 <th>First Name</th>
-                <th>Date Paid</th>
-                <th>Action</th>
+                <th>Sign In</th>
+                <th>Sign Out</th>
             </tr>
         </thead>
         <tbody>
-        {% for res in result %}
+        {% for res in query %}
             <tr>
                 <td>{{ res.memberid }}</td>
                 <td>{{ res.lname }}</td>
                 <td>{{ res.fname }}</td>
-                <td>{{ res.datepaid }}</td>
-                <td><a class="btn btn-outline-primary" href="{{ url_for('deletepayment', pid=res.pid) }}"><i class="glyphicon glyphicon-trash"></i>Delete</a></td>
+                <td>{{ res.signin }}</td>
+                <td>{{ res.signout }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+</div>
 
-{% endwith %}
+
 {% endblock %}

@@ -12,7 +12,7 @@ class AdminSetup(FlaskForm):
     orgName = StringField('Organization Name', validators=[InputRequired(), Length(min=8, message="Invalid input")])
     orgCode = StringField('Organization Code', validators=[InputRequired(), Length(min=3, max=4, message='Invalid input')])
     description = TextAreaField('Description', validators=[InputRequired(), Length(max=800, message="Exceeded max character count")])
-    courses = StringField('Courses', validators=[Length(min=0)])
+    courses = StringField('Courses', validators=[Length(min=0)], default=" ")
 
 
 class LoginForm(FlaskForm):
@@ -27,7 +27,7 @@ class NewMember(FlaskForm):
     fname = StringField('First Name', validators=[InputRequired(), Length(min=3, max=30, message="Must be at least 3 characters long")])
     mname = StringField('Middle Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
     lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Must be at least 2 characters long")])
-    course = QuerySelectField('Type',query_factory=lambda: Courses.query,allow_blank=False)
+    course = QuerySelectField('Type',query_factory=lambda: Courses.query, allow_blank=False)
 
 
 class NewBudget(FlaskForm):
