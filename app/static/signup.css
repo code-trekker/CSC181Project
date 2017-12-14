@@ -22,8 +22,13 @@ body {
     background-size: cover;
 }
 
-label.control-label{
+.wrapper label.control-label{
     display: none;
+}
+
+a.navbar-brand {
+    position: relative;
+    left: -100px;
 }
 
 h4 {
@@ -37,13 +42,13 @@ h4 {
 }
 
 .navbar-nav {
-    margin-left: 67%;
+    margin-left: 57%;
 }
 
 .container-fluid {
     position: relative;
     width: 45%;
-    margin-top: -550px;
+    margin-top: -480px;
     margin-left: 48%;
     font-size: 1.3em;
 }
@@ -74,7 +79,7 @@ p.help-block {
 
 .wrapper {
     margin-left: -67.5%;
-    margin-top: -5%;
+    margin-top: 7%;
 }
 
 .form-signin {
@@ -97,6 +102,7 @@ p.help-block {
     font-size: 16px;
     height: auto;
     padding: 10px;
+    width: 100%;
 }
 
 input[type=text] {
@@ -118,5 +124,16 @@ input[type=password] {
     background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
     background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
     background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+}
+
+#setup {
+    padding-top: 10%;
+}
+
+#description, #description ::placeholder {
+    height: 100px;
+    text-align: left;
+    padding-bottom: 15%;
+    resize: none;
 }
 

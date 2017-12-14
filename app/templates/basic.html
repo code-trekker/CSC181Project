@@ -1,0 +1,106 @@
+{% extends "bootstrap/base.html" %}
+
+
+
+{% block styles %}
+    <link href="/static/bootstrap1.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
+    <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
+    {% if session['themeid']==0 %}
+   			<link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage1.css">
+    {% elif session['themeid']==1 %}
+   			<link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage2.css">
+    {% else %}
+   			<link id="pagestyle" rel="stylesheet" type="text/css" href="/static/homepage3.css">
+    {% endif %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+
+{% block content %}
+<div id='cssmenu'>
+<ul>
+    <li><a href="/viewhome"><span><i class="glyphicon glyphicon-home" style="margin-right:0.5em"></i>Home</span></a></li>
+    <li><a href="/viewbudgets"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i>Budgets</span></a></li>
+    <li><a href="/viewexpenses"><span><i class="glyphicon glyphicon-tags" style="margin-right:0.6em"></i>Expenses</span></a></li>
+    <li><a href="/viewevent"><span><i class="glyphicon glyphicon-bell" style="margin-right:0.5em"></i>Events</span></a></li>
+    <li><a href="/viewerlogin"><span><i class="glyphicon glyphicon-log-out" style="margin-right:0.5em"></i>Logout</span></a></li>
+<div class="dropdown" style="float: right;">
+  <button class="dropbtn"><span><i class="glyphicon glyphicon-cog" style="margin-right:0.5em">Themes</i></span></button>
+  <div class="dropdown-content">
+    <a onclick="swapStylesheet(1,'/static/homepage2.css')" style="color: black">Bright</a>
+    <a onclick="swapStylesheet(2,'/static/homepage3.css')" style="color: black">Dark</a>
+    <a onclick="swapStylesheet(0,'/static/homepage1.css')" style="color: black">Default</a>
+  </div>
+</div>
+</ul>
+</div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script src="/static/jquery-1.12.4.js" type="text/javascript"></script>
+    <script src="/static/jquery.dataTables.min.js" type="text/javascript"></script>
+{#    <script src="/static/dataTables.bootstrap4.min.js" type="text/javascript"></script>#}
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        } );
+    </script>
+    <script type="text/javascript">
+        function swapStylesheet(themeid,sheet){
+            /*document.getElementById('pagestyle').setAttribute('href', sheet);*/
+    		$.ajax({
+      			url:"/swaptheme/"+themeid,
+      			method: "POST",
+      			success: function(resp){
+        		document.getElementById('pagestyle').setAttribute('href', sheet);
+
+        		//console.log(resp);
+        			},
+      			error: function(resp){
+        				}
+      				}
+    			);
+  			}
+  		</script>
+
+    <script>
+        var daysofweek = ['sun', 'mon', 'tus', 'wed', 'thu', 'fri', 'sat'];
+var month =['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+function clock(){
+    // setting up my variables
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    var day = h<11 ? 'AM': 'PM';
+    var daytoday = today.getDay();
+    var date = today.getDate();
+    var mon = today.getMonth();
+    var year = today.getFullYear();
+
+    // adding leading zeros to them
+    h = h<10? '0'+h: h;
+    m = m<10? '0'+m: m;
+    s = s<10? '0'+s: s;
+
+    // writing it down in the document
+    document.getElementById('hours').innerHTML = h;
+    document.getElementById('min').innerHTML = m;
+    document.getElementById('sec').innerHTML = s;
+    document.getElementById('time').innerHTML = day;
+    document.getElementById(''+daysofweek[daytoday]+'').style.color = '#2CC1E9';
+    document.getElementById('day').innerHTML = date;
+    document.getElementById('month').innerHTML = month[mon];
+    document.getElementById('year').innerHTML = year;
+
+}
+var inter = setInterval(clock,400);
+    </script>
+
+
+{% endblock %}

@@ -6,16 +6,24 @@ Add Budget
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
-    <link href="/static/budgets.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
-<h1>Add New Budget</h1>
-        <h3> {{ msgs}}</h3>
-    <div class="input-budget">
+<ol class="breadcrumb" id="form-breadcrumbs">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item"><a href="/adminbudgets">Budgets</a></li>
+    <li class="breadcrumb-item">New Budget</li>
+</ol>
+
+
+    <div class="container">
+    <div class="wrapper">
+    <div class="form-signin">
+        <h3 class="form-signin-heading">Add A Budget</h3>
     <form class="form form-horizontal" action="{{ url_for('newbudget') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
@@ -24,10 +32,12 @@ Add Budget
         {{ wtf.form_field(form.semester) }}
         {{ wtf.form_field(form.budgetBal) }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Add">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminbudgets'">
+    <input class="btn btn-success btn-block" type="submit" value="Add">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
 
+    </div>
+    </div>
     </div>
     {% endwith %}
 {% endblock %}

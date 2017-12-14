@@ -6,29 +6,40 @@ New Event
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
-    <link href="/static/events.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+{#    reference for other templates#}
+    <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
+
 {% block content %}
     {% with msg = get_flashed_messages() %}
-<h1>Create New Event</h1>
-        <h3> {{ msgs }} </h3>
-    <div class="input-event">
+
+<ol class="breadcrumb" id="form-breadcrumbs">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>
+    <li class="breadcrumb-item">New Event</li>
+</ol>
+
+    <div class="container">
+    <div class="wrapper">
+    <div class="form-signin">
+        <h3 class="form-signin-heading">Add New Event</h3>
     <form class="form form-horizontal" action="{{ url_for('newevent') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.eventid, placeholder="Pick a 4-digit code e.g., 0042") }}
         {{ wtf.form_field(form.eventName, placeholder="Name your event") }}
         {{ wtf.form_field(form.eventDate) }}
         {{ wtf.form_field(form.allocation, placeholder="Enter budget allocation") }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Create">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminevents'">
+    <input class="btn btn-success btn-block" type="submit" value="Create">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
 
+    </div>
+    </div>
     </div>
     {% endwith %}
 {% endblock %}

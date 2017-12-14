@@ -6,30 +6,39 @@ New Expense
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
-    <link href="/static/expenses.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
     {% with msg = get_flashed_messages() %}
-<h1>Add New Expense</h1>
-        <h3> {{ msgs }} </h3>
-    <div class="input-expense">
+<ol class="breadcrumb" id="form-breadcrumbs">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item"><a href="/adminexpenses">Expenses</a></li>
+    <li class="breadcrumb-item">New Expense</li>
+</ol>
+
+    <div class="container">
+    <div class="wrapper">
+    <div class="form-signin">
+        <h3 class="form-signin-heading">Add New Expense</h3>
     <form class="form form-horizontal" action="{{ url_for('newexpense') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.expid, placeholder="Pick a 4-digit ID") }}
         {{ wtf.form_field(form.eid, placeholder="Enter event ID") }}
         {{ wtf.form_field(form.name, placeholder="e.g., t-shirt printing") }}
         {{ wtf.form_field(form.amount, placeholder="Enter amount spent") }}
         {{ wtf.form_field(form.date) }}
         {{ wtf.form_field(form.orNo, placeholder="Enter OR number") }}
     </dl>
-    <input class="btn btn-success" type="submit" value="Create">
-    <input class="btn btn-primary" type="button" value="Back" onclick="window.location.href='/adminexpenses'">
+    <input class="btn btn-success btn-block" type="submit" value="Create">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
     </form>
+
+    </div>
+    </div>
     </div>
     {% endwith %}
 {% endblock %}

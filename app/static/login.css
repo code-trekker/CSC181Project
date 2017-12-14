@@ -14,13 +14,19 @@ body {
 }
 
 .navbar-nav {
-    margin-left: 65.2%;
+    margin-left: 55%;
 }
 
 .wrapper {
 	margin-top: 12.5%;
 	margin-bottom: 20px;
 }
+
+a.navbar-brand {
+    position: relative;
+    left: -100px;
+}
+
 
 .form-signin {
     max-width: 420px;

@@ -5,12 +5,14 @@
 Login
 {% endblock %}
 {% block styles %}
-    {{super()}}
+    <link href="/static/bootstrap.min1.css" rel="stylesheet">
+    {{ super() }}
     <link rel="stylesheet" href="/static/view.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
+   {% for org in name %}
 <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -20,11 +22,10 @@ Login
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">EC Buddy</a>
+          <a class="navbar-brand" href="/">{{ org }}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#about">About</a></li>
             <li><a href="/viewerlogin">Login</a></li>
             <li><a href="/admin">Admins</a> </li>
           </ul>
@@ -35,17 +36,25 @@ Login
 <div class = "container">
 	<div class="wrapper">
         <form class="form-signin" name="Login_Form" action="{{ url_for('viewerlogin')}}" method="POST" role="form" autocomplete="off">
+            {% with msg = get_flashed_messages() %}
+                {% if msg %}
+                    {% for ms in msg %}
+                        <p class="errormsg">{{ ms }}</p>
+                        {% endfor %}
+                {% endif %}
+            {% endwith %}
             <h3 class="form-signin-heading">Member Sign In</h3>
             <hr class="colorgraph"><br>
             <dl>
             {{ form.hidden_tag() }}
             {{ form.csrf_token }}
-            {{ wtf.form_field(form.memberid, placeholder="Enter ID without dashes") }}
+            {{ wtf.form_field(form.memberid, placeholder="Enter your ID without a dash") }}
             </dl>
             <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+        <a class="register" href="/">Not yet registered? Click here</a>
         </form>
     </div>
 </div>
-
+{% endfor %}
 {% endblock %}
 

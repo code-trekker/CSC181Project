@@ -2,10 +2,11 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-EC Buddy
+EZ Buddy
 {% endblock %}
 
 {% block styles %}
+    <link href="/static/bootstrap.min1.css" rel="stylesheet">
     {{ super() }}
     <link href="/static/signup.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
@@ -13,29 +14,25 @@ EC Buddy
 
 
 {% block content %}
+    {% for des in desc %}
+    {% for org in name %}
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">EC Buddy</a>
+
+          <a class="navbar-brand" href="/">{{ org }}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#about">About</a></li>
             <li><a href="/viewerlogin">Login</a></li>
-            <li><a href="/admin">Admins</a> </li>
+            <li><a href="/admin">Admins</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
-
-    {% with msg = get_flashed_messages() %}
-    <h1></h1>
 
     <div class = "container">
 	<div class="wrapper">
@@ -52,7 +49,6 @@ EC Buddy
             {{ wtf.form_field(form.mname, placeholder='Middle Name') }}
             {{ wtf.form_field(form.lname, placeholder='Last Name') }}
             {{ wtf.form_field(form.course, placeholder='Course Name e.g., Computer Science, Computer Engineering') }}
-            {{ wtf.form_field(form.orgCode) }}
         </dl>
         <button class="btn btn-lg btn-success btn-block"  name="Submit" value="Register Now!" type="Submit">Register Now!</button>
         <div class="viewlink">
@@ -65,21 +61,22 @@ EC Buddy
     <div class="container-fluid">
     <div class="panel panel-primary panel-transparent">
         <div class="panel-heading">
-             <h3 class="panel-title">What is EC Buddy?</h3>
+             <h3 class="panel-title" style="text-align: center">What is {{ org }}?</h3>
         </div>
         <div class="panel-body">
-            <p>
-                Welcome to EC Buddy, your all-in-one manager for Executive Council-related stuff!<br>
-            </p>
+                    <p>{{ des }}</p>
             As a member, you can:
             <ul>
                 <li>View budgets from the current and past semesters</li>
                 <li>Look at expenses for current and past events</li>
-                <li>Monitor events that your EC has planned</li>
-            </ul>
-
+                <li>Monitor events that your organization has planned</li>
+            </ul><br>
+            Join now and keep up to date with {{ org }}!
         </div>
     </div>
 </div>
-    {% endwith %}
+
+
+    {% endfor %}
+    {% endfor %}
 {% endblock %}
