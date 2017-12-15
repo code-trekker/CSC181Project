@@ -11,44 +11,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
+{% block body_attrs %}
+    onload=startTime()
+{% endblock %}
 
 {% block content %}
 {{ super() }}
 <div id="main"><br><br><br>
-    <h1 style="font-family: sans-serif; margin-top: 3.5%; font-size: 3.2em; width: 100%;">Hello {{ session['user'] }}! Welcome to your homepage!</h1>
+
 </div>
-<div class="row">
-<div class="col-md-6 offset-3">
+<h1 id="clock"></h1>
+    <p id="hex-color" style="display: none;"></p>
 <div id="viewbuttons" align="center">
+<h1 id="mainhead" style="font-family: sans-serif; margin-top: 3.5%; font-size: 3.2em; width: 100%;">Hello {{ session['user'] }}! Welcome to your homepage!</h1>
     <div id="viewerbuttons1">
         <a id="viewbudgets" class="btn btn-primary" href="/viewbudgets"><span><i class="glyphicon glyphicon-usd gi-1"></i><br>View Budgets</span></a>
         <a id="viewexpenses" class="btn btn-primary" href="/viewexpenses"><span><i class="glyphicon glyphicon-tags gi-2"></i><br>View Expenses</span></a>
         <a id="viewevent" class="btn btn-primary" href="/viewevent"><span><i class="glyphicon glyphicon-bell gi-3"></i><br>View Events</span></a>
     </div>
     <div id="viewerbuttons2">
-        <a id="pastbudgets" class="btn btn-primary" href="#pastbudgets">Past Budgets</a>
-        <a id="pastexpenses" class="btn btn-primary" href="#pastexpenses">Past Expenses</a>
-        <a id="pastevent" class="btn btn-primary" href="#pastevent">Past Events</a>
+        <a id="pastexpenses" class="btn btn-primary" href="/viewpastexpenses">Past Expenses</a>
+        <a id="pastevent" class="btn btn-primary" href="/viewpastevent">Past Events</a>
     </div>
 </div>
-</div>
-</div>
 
-{#<div id="clocks" class="row">#}
-{#<div class="clock">#}
-{#            <div class="inside">#}
-{#                <div class="content">#}
-{#                    <p class='days'><span id="sun">SUN</span>&nbsp;&nbsp;<span id="mon">MON</span>&nbsp;&nbsp;<span id=tus"">TUS</span>&nbsp;&nbsp;<span id="wed">WED</span>&nbsp;&nbsp;<span id="thu">THU</span>&nbsp;&nbsp;<span id="fri">FRI</span>&nbsp;&nbsp;<span id="sat">SAT</span></p>#}
-{#                    <br>#}
-{#                    <p class='text'><span id='hours'></span> : <span id='min'></span> : <span id='sec'></span>&nbsp;&nbsp;<span id='time'></span></p>#}
-{#                    <p id=date>#}
-{#                        <span id='day'></span>#}
-{#                        <span id='month'></span>#}
-{#                        <span id='year'></span>#}
-{#                    </p>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#</div>#}
+
+
 {% endblock %}
 

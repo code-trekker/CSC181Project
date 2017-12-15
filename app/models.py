@@ -66,7 +66,7 @@ class Member(db.Model):
 class Organization(db.Model):
     orgCode = db.Column(db.String(10), primary_key=True, autoincrement=False)
     orgName = db.Column(db.String(70), nullable=False, unique=True)
-    description = db.Column(db.String(800), nullable=False)
+    description = db.Column(db.String(1200), nullable=False)
     budgets = db.relationship('Budget', backref='organization', lazy=True)
     events = db.relationship('Event', backref='organization', lazy=True)
     exp = db.relationship('Expenses', backref='organization', lazy=True)
@@ -177,7 +177,7 @@ class Attendance(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     memberid = db.Column(Integer(8), db.ForeignKey('member.memberid'), nullable=False, unique=False)
     eventid = db.Column(db.Integer(), db.ForeignKey('event.eventid'), nullable=False)
-    date = db.Column(db.CHAR(10), nullable=False)
+    date = db.Column(db.String(20), nullable=False)
     signin = db.Column(db.CHAR(5), nullable=True)
     signout = db.Column(db.CHAR(5), nullable=True)
 

@@ -2,7 +2,7 @@
 
 .dropbtn {
   text-align: center;
-  background-color: #2D5396;
+  background-color: #687eec;
   color: white;
   padding-top: 7px;
   padding-right: 7px;
@@ -10,13 +10,14 @@
   padding-bottom: 10px;
   font-size: 13px;
   font-family: 'Open Sans', sans-serif;
-  border-color: #ffffff;
+  border-color: #d0d0d0;
   cursor: pointer;
     height: 35px;
+  width:100px;
+
 }
 
 .dropdown {
-  color: #7B1FA2;
   position: relative;
   display: inline-block;
   font-family: 'Open Sans', sans-serif;
@@ -25,13 +26,14 @@
   padding-right: 7px;
   padding-left: 7px;
   padding-bottom: 0;
+
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 100px;
   box-shadow: 0 8px 16px 0
   rgba(0,0,0,0.2);
 }
@@ -40,24 +42,26 @@
   color: black;
   padding: 12px 16px;
   text-decoration: none;
-  display: block;
+    display: block;
 }
 
 .dropdown-content,
-a:hover{background-color:#f1f1f1}
+a:hover{
+    background-color: #e0e0e0
+}
 
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #7effa5;
+  background-color: #a7d4ff;
 }
 
 
 #cssmenu {
   position: fixed;
-  background-color: #6495ED;
+  background-color: #343434;
   width: 100%;
 }
 #cssmenu a {
@@ -114,7 +118,7 @@ a:hover{background-color:#f1f1f1}
   transition: color .25s;
 }
 #cssmenu ul li a:hover {
-  color: #333333;
+  color: #687eec;
   background: transparent;
 }
 #cssmenu ul li a:hover:before {
@@ -139,7 +143,7 @@ a:hover{background-color:#f1f1f1}
   bottom: 0;
   height: 3px;
   width: 0;
-  background: #333333;
+  background: #687eec;
   -webkit-transition: width .25s;
   -moz-transition: width .25s;
   -ms-transition: width .25s;
@@ -191,3 +195,35 @@ a:hover{background-color:#f1f1f1}
   }
 }
 
+body {
+    background-image: url("dark.jpg");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+
+#viewbuttons {
+    box-shadow: 5px 5px 3px #363636;
+    background-color: #a2a2a2;
+}
+
+.btn-primary, .btn {
+    box-shadow: 5px 5px 3px grey;
+    background-color: #343434 ;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #343434;
+    color: #687eec;
+}
+
+ol li {
+    color: #d4d4d4;
+}
+
+#tables {
+    background-color: #a2a2a2;
+}
+
+#clock {
+    color: #a2a2a2;
+}

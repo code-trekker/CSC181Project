@@ -7,7 +7,6 @@ EZ Buddy
 
 {% block styles %}
     <link href="/static/bootstrap.min1.css" rel="stylesheet">
-    {{ super() }}
     <link href="/static/signup.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
@@ -27,6 +26,7 @@ EZ Buddy
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <li><a href="#about">About</a></li>
             <li><a href="/viewerlogin">Login</a></li>
             <li><a href="/admin">Admins</a></li>
           </ul>

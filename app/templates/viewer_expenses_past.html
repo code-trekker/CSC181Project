@@ -2,18 +2,21 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
-Expenses
+Past Expenses
 {% endblock %}
 
 {% block content %}
     {{ super() }}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/viewhome">Home</a></li>
-    <li class="breadcrumb-item">Expenses</li>
+<ol class="breadcrumb" id="expenses-breadcrumbs">
+    <li class="breadcrumb-item"><a href='/viewhome'>Home</a></li>
+    <li class="breadcrumb-item"><a href='/viewexpenses'>Expenses</a></li>
+    <li class="breadcrumb-item">Past Expenses</li>
 </ol>
 
+
+
 <div id="tables" style="margin-top: 5%">
-<h1 style="font-family: sans-serif">Expenses</h1>
+<h1 style="font-family: sans-serif">Record of Past Expenses</h1>
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -36,8 +39,7 @@ Expenses
         {% endfor %}
         </tbody>
     </table>
-<a class="btn btn-primary" id="viewpastexp" href="/viewpastexpenses">Past Expenses</a>
 </div>
 
-{% endblock %}
 
+{% endblock %}

@@ -13,6 +13,7 @@
   border-color: #ffffff;
   cursor: pointer;
     height: 35px;
+    width:100px;
 }
 
 .dropdown {
@@ -31,7 +32,7 @@
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 100px;
   box-shadow: 0 8px 16px 0
   rgba(0,0,0,0.2);
 }
@@ -51,7 +52,7 @@ a:hover{background-color:#f1f1f1}
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #dcdbe7;
+  background-color: #24b0e7;
 }
 
 
@@ -114,7 +115,7 @@ a:hover{background-color:#f1f1f1}
   transition: color .25s;
 }
 #cssmenu ul li a:hover {
-  color: #000000;
+  color: #b5b5b5;
     background: transparent;
 }
 #cssmenu ul li a:hover:before {
@@ -138,7 +139,7 @@ a:hover{background-color:#f1f1f1}
   bottom: 0;
   height: 3px;
   width: 0;
-  background: #333333;
+  background: #b5b5b5;
   -webkit-transition: width .25s;
   -moz-transition: width .25s;
   -ms-transition: width .25s;
@@ -188,4 +189,28 @@ a:hover{background-color:#f1f1f1}
   #cssmenu ul li a:before {
     display: none;
   }
+}
+
+#viewbuttons {
+    box-shadow: 5px 5px 3px grey;
+}
+
+.btn-primary, .btn {
+    box-shadow: 5px 5px 3px grey;
+
+    border: none;
+}
+
+#tables {
+    background-color: #cbcad5;
+}
+
+.btn-primary, .btn {
+    box-shadow: 5px 5px 3px grey;
+    background-color: #123471;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #123471;
+    color: #656565;
 }

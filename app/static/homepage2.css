@@ -13,6 +13,7 @@
   border-color: #ffffff;
   cursor: pointer;
     height: 35px;
+    width: 100px;
 }
 
 .dropdown {
@@ -31,7 +32,7 @@
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 100px;
   box-shadow: 0 8px 16px 0
   rgba(0,0,0,0.2);
 }
@@ -57,7 +58,7 @@ a:hover{background-color:#f1f1f1}
 
 #cssmenu {
   position: fixed;
-  background-color: #59a1ff;
+  background-color: #729bff;
   width: 100%;
 }
 #cssmenu a {
@@ -189,4 +190,33 @@ a:hover{background-color:#f1f1f1}
   #cssmenu ul li a:before {
     display: none;
   }
+}
+
+body {
+    background-image: url("homepage2.jpg");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+
+#viewbuttons {
+    box-shadow: 5px 5px 3px #747474;
+    background-color: #f6f6f6;
+}
+
+.btn-primary, .btn {
+    box-shadow: 5px 5px 3px grey;
+    background-color: #44cece;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #44cece;
+    color: #212121;
+}
+
+#tables {
+    background-color: #f6f6f6;
+}
+
+#clock {
+    color: #212121;
 }

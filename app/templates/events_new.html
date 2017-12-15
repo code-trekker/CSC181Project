@@ -7,13 +7,14 @@ New Event
 
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.css">
-{#    reference for other templates#}
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 
 {% block content %}
+    {% include "adminbar.html" %}
     {% with msg = get_flashed_messages() %}
 
 <ol class="breadcrumb" id="form-breadcrumbs">
@@ -24,7 +25,7 @@ New Event
 
     <div class="container">
     <div class="wrapper">
-    <div class="form-signin">
+    <div class="form-signin" style="margin-top: 5%">
         <h3 class="form-signin-heading">Add New Event</h3>
     <form class="form form-horizontal" action="{{ url_for('newevent') }}" method="POST" role="form">
     <dl>
