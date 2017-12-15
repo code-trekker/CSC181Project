@@ -56,22 +56,29 @@ def viewreg():
         description = db.session.query(Organization.description).first()
         name = db.session.query(Organization.orgName).first()
         org = db.session.query(Organization.orgCode).first()
+        check = Organization.query.first()
+        if check is None:
+            return redirect(url_for('setup'))
         if request.method == 'POST' and form.validate_on_submit():
             memberid = Member.query.filter_by(memberid=int(form.memberid.data)).first()
             if memberid is None:
-                member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
-                            lname=form.lname.data, course=form.course.data, orgCode=org.orgCode, status='ACTIVE')
-                db.session.add(member)
-                db.session.commit()
-                return redirect(url_for('viewerlogin'))
+                if len(str(form.course.data)) == 0:
+                    member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
+                                    lname=form.lname.data, course='--no course--', orgCode=org.orgCode,
+                                    status='ACTIVE', themeid=0)
+                    db.session.add(member)
+                    db.session.commit()
+                    return redirect(url_for('viewerlogin'))
+                else:
+                    member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
+                            lname=form.lname.data, course=form.course.data, orgCode=org.orgCode, status='ACTIVE', themeid=0)
+                    db.session.add(member)
+                    db.session.commit()
+                    return redirect(url_for('viewerlogin'))
             elif memberid.memberid == int(form.memberid.data):
                 msgs = "ID already registered!"
                 return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
         return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
-
-@app.route('/about', methods=['GET','POST'])
-def about():
-    return render_template('roundabout.html')
 
 @app.route('/admin', methods=['GET', 'POST'])
 def login():
@@ -119,6 +126,7 @@ def newbudget():
         if check is None:
             db.session.add(Budget(schoolyear=form.schoolyear.data, semester=form.semester.data, budgetBal=form.budgetBal.data, Budget_orgCode=current_user.orgCode))
             db.session.commit()
+            flash(' Budget recorded successfully!')
             return redirect(url_for('adminbudgets'))
         elif check.schoolyear == form.schoolyear.data and check.semester == form.semester.data:
             msgs = "Budget already exists!"
@@ -280,7 +288,8 @@ def newattendance(eventid, eventdate):
 @login_required
 def attendancelist(eventid):
     check = Event.query.filter_by(eventid=eventid).first()
-    query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid, Member.fname, Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
+    query = db.session.query(Attendance.signin, Attendance.signout, Attendance.memberid,
+                             Member.fname, Member.lname).outerjoin(Member, Event).filter_by(eventid=eventid).order_by(Member.lname)
 
     return render_template('attendance_list.html', eventid=eventid, query=query, check=check)
 
@@ -475,9 +484,11 @@ def pastpayment(colid):
 def deletepayment(pid):
     query = Payments.query.filter_by(pid=pid).first()
     Payments.query.filter_by(pid=pid).delete()
+    decrement = Collection.query.filter_by(colid=query.Payments_colid).first()
+    decrement.amountcollected -= decrement.fee
     db.session.commit()
     flash(' Successfully removed!')
-    return redirect(url_for('viewpayment', colid=query.Payments_colid)) #<---- WORK ON THIS!
+    return redirect(url_for('viewpayment', colid=query.Payments_colid))
 
 
 @app.route('/adminlogs/')
@@ -566,9 +577,7 @@ def viewpastexpenses():
     now = datetime.datetime.now()
     query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
                              Event.eventName).outerjoin(Event).filter(Event.schoolyear < now.year)
-    link1 = '/viewhome'
-    link2 = '/viewexpenses'
-    return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
+    return render_template('viewer_expenses_past.html', query=query)
 
 @app.route('/viewevent', methods=['GET','POST'])
 def viewevents():
@@ -587,7 +596,6 @@ def viewpastevent():
 def viewlogout():
     session.pop('user', None)
     session.pop('org', None)
-    form = ViewLogin()
     return redirect(url_for('viewerlogin'))
 
 

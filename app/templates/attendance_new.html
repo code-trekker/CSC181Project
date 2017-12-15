@@ -7,11 +7,13 @@ Sign In/Sign Out
 
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
+    {% include "adminbar.html" %}
 <ol class="breadcrumb" id="form-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
     <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>

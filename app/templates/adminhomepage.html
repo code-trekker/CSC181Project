@@ -21,29 +21,13 @@ Admin Home
 {% endblock %}
 
 {% block scripts %}
-   <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-   <script src="script.js"></script>
-   {{ super() }}
+
 {% endblock %}
 
 {% block content %}
-<div id='cssmenu'>
-<ul>
-   <li><a href="/adminhome"><span><i class="glyphicon glyphicon-home" style="margin-right:0.5em"></i>Home</span></a></li>
-   <li><a href="/admincollection"><span><i class="glyphicon glyphicon-piggy-bank" style="margin-right:0.5em"></i>Collection</span></a></li>
-   <li><a href="/adminbudgets"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i>Budgets</span></a></li>
-   <li><a href="/adminexpenses"><span><i class="glyphicon glyphicon-tags" style="margin-right:0.6em"></i>Expenses</span></a></li>
-   <li><a href="/adminevents"><span><i class="glyphicon glyphicon-bell" style="margin-right:0.5em"></i>Events</span></a></li>
-   <li><a href="/adminmembers"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i>Members</span></a></li>
-   <li><a href="/adminlogs"><span><i class="glyphicon glyphicon-folder-close" style="margin-right:0.5em"></i>Logs</span></a></li>
-   <li><a href="/logout"><span><i class="glyphicon glyphicon-log-out" style="margin-right:0.5em"></i>Logout</span></a></li>
-</ul>
-</div>
-
-<div id="main"><br><br><br>
-    <h1 style="font-family: sans-serif; text-align: center;" id="adminmsg">{{ msgs }}<br>Welcome to the admin homepage!</h1>
-
+{% include "adminbar.html" %}
 <div class="col-md-12" id="adminbuttons">
+    <h1 style="font-family: sans-serif; text-align: center; text-shadow: 3px 3px 5px #727272;" id="adminmsg">{{ msgs }}<br>Welcome to the admin homepage!</h1>
     <div id="quickbois">
         <a id="make-payment" class="btn btn-primary" href="/adminpayment"><span><i class="glyphicon glyphicon-piggy-bank" style="margin-right:0.5em"></i><br>Make a payment</span></a>
         <a id="add-event" class="btn btn-primary" href="/newevent"><span><i class="glyphicon glyphicon-calendar" style="margin-right:0.5em"></i><br>Add an event</span></a>
@@ -52,8 +36,7 @@ Admin Home
         <a id="add-collection" class="btn btn-primary" href="/newcollection"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i><br>Add a collection</span></a>
         <a id="deactivate-students" class="btn btn-primary" href="/deactivate"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i><br>Deactivate students</span></a>
     </div>
-</div>
-</div>
+
 
 
 

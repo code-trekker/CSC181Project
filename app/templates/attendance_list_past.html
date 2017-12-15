@@ -6,8 +6,8 @@ Attendance: {{ check.eventName }}
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
@@ -29,7 +29,7 @@ Attendance: {{ check.eventName }}
 {% endblock %}
 
 {% block content %}
-
+{% include "adminbar.html" %}
 <ol class="breadcrumb" id="payment-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
     <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>

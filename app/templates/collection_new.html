@@ -7,11 +7,13 @@ New Collection
 
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="/static/mainstyle.css" rel="stylesheet">
     <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
+    {% include "adminbar.html" %}
     {% with msg = get_flashed_messages() %}
 <ol class="breadcrumb" id="form-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
@@ -21,7 +23,7 @@ New Collection
 
     <div class="container">
     <div class="wrapper">
-    <div class="form-signin">
+    <div class="form-signin" style="margin-top: 7%">
         <h3 class="form-signin-heading">Create New Collection</h3>
     <form class="form form-horizontal" action="{{ url_for('newcollection') }}" method="POST" role="form">
     <dl>

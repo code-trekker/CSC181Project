@@ -7,6 +7,7 @@ Deactivate
 
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
@@ -19,13 +20,13 @@ Deactivate
 
     <div class="container">
         <div class="wrapper">
-            <div class="form-signin">
+            <div class="form-signin" style="margin-top: 12%">
         <h3 class="form-signin-heading">Confirm Password</h3>
     <form class="form form-horizontal" action="{{ url_for('deactivate') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
-        {{ wtf.form_field(form.password, placeholder="Enter password") }}
+        {{ wtf.form_field(form.password, placeholder="Enter your password") }}
     </dl>
     <div id="deactivate-buttons">
         <input class="btn btn-success btn-block" type="submit" value="De-Activate">

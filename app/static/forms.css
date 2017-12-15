@@ -8,9 +8,8 @@ h1 {
     margin-top: 8%;
 }
 
-body {
-    background-color: cornflowerblue;
-    max-width: 100%;
+.breadcrumb {
+
 }
 
 .container {
@@ -19,16 +18,17 @@ body {
 
 .form-signin {
     max-width: 420px;
-    padding: 30px 38px 50px;
+    padding: 20px 38px 30px;
     margin: 0 auto;
     background-color: #eee;
     border: 3px dotted rgba(0,0,0,0.1);
     border-radius: 15px;
+    margin-top: 7%;
   }
 
 .form-signin-heading {
     text-align:center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     color: dimgrey;
     font-size: 40px;
 }
@@ -47,4 +47,14 @@ body {
     position: relative;
     margin-left: 65%;
     margin-top: 3%;
+}
+
+#date {
+    font-size: 1em;
+    margin-top: 0;
+}
+
+input[type=submit] {
+    height: 50px;
+    font-size: 1.5em;
 }

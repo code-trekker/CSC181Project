@@ -11,8 +11,8 @@ class AdminSetup(FlaskForm):
     password = StringField('Password', validators=[InputRequired(), Length(min=8, max=15, message="Invalid input")])
     orgName = StringField('Organization Name', validators=[InputRequired(), Length(min=8, message="Invalid input")])
     orgCode = StringField('Organization Code', validators=[InputRequired(), Length(min=3, max=4, message='Invalid input')])
-    description = TextAreaField('Description', validators=[InputRequired(), Length(max=800, message="Exceeded max character count")])
-    courses = StringField('Courses', validators=[Length(min=0)], default=" ")
+    description = TextAreaField('Description', validators=[InputRequired(), Length(max=1200, message="Exceeded max character count")])
+    courses = StringField('Courses', validators=[Length(min=0)], default=None)
 
 
 class LoginForm(FlaskForm):

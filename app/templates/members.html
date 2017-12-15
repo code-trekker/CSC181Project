@@ -8,9 +8,8 @@ Members
 {% block styles %}
     <link href="/static/bootstrap1.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/bootstrap.css">
-    <link rel="stylesheet" href="/static/mainstyle.css">
-{#    <link rel="stylesheet" href="/static/dataTables.bootstrap4.min.css">#}
     <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
@@ -32,37 +31,14 @@ Members
 {% endblock %}
 
 {% block content %}
-<div id='cssmenu'>
-<ul>
-   <li><a href="/adminhome"><span><i class="glyphicon glyphicon-home" style="margin-right:0.5em"></i>Home</span></a></li>
-   <li><a href="/admincollection"><span><i class="glyphicon glyphicon-piggy-bank" style="margin-right:0.5em"></i>Collection</span></a></li>
-   <li><a href="/adminbudgets"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i>Budgets</span></a></li>
-   <li><a href="/adminexpenses"><span><i class="glyphicon glyphicon-tags" style="margin-right:0.6em"></i>Expenses</span></a></li>
-   <li><a href="/adminevents"><span><i class="glyphicon glyphicon-bell" style="margin-right:0.5em"></i>Events</span></a></li>
-   <li><a href="/adminmembers"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i>Members</span></a></li>
-   <li><a href="/adminlogs"><span><i class="glyphicon glyphicon-folder-close" style="margin-right:0.5em"></i>Logs</span></a></li>
-   <li><a href="/logout"><span><i class="glyphicon glyphicon-log-out" style="margin-right:0.5em"></i>Logout</span></a></li>
-</ul>
-</div>
+{% include "adminbar.html" %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item">Members</li>
+</ol>
 
-<div id="main"><br><br><br>
-  <h1 style="font-family: sans-serif">Members</h1>
-{% with msg = get_flashed_messages() %}
-    {% if msg %}
-        {% for alert in msg %}
-            <div class="messages">
-            <div class="col-sm-6 col-md-6">
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                    ×</button>
-                <span class="glyphicon glyphicon-info-sign"></span><strong>{{ alert }}</strong>
-            </div>
-        </div>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-<div id="tables">
+<div id="tables" style="margin-top: 4%">
+<h1 style="font-family: sans-serif">Members</h1>
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -86,7 +62,6 @@ Members
         </tbody>
     </table>
 </div>
-</div>
 
-{% endwith %}
+
 {% endblock %}

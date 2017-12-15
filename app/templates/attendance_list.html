@@ -6,8 +6,8 @@ Attendance: {{ check.eventName }}
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/mainstyle.css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
 {% endblock %}
 
@@ -29,17 +29,15 @@ Attendance: {{ check.eventName }}
 {% endblock %}
 
 {% block content %}
-
+{% include "adminbar.html" %}
 <ol class="breadcrumb" id="payment-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
     <li class="breadcrumb-item"><a href="/adminevents">Events</a></li>
     <li class="breadcrumb-item">Attendance Info</li>
 </ol>
 
-<div id="main"><br><br><br>
-  <h1 style="font-family: sans-serif">Attendance for: {{ check.eventName }}</h1>
-
 <div id="tables">
+<h1 style="font-family: sans-serif">Attendance for: {{ check.eventName }}</h1>
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead class="collection">
             <tr>
@@ -63,7 +61,4 @@ Attendance: {{ check.eventName }}
         </tbody>
     </table>
 </div>
-</div>
-
-
 {% endblock %}
