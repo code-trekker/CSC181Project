@@ -42,11 +42,10 @@ h1 {
     margin-top: 2%;
 }
 
-.alert {
-    width: 550px;
-    position: relative;
-    margin-left: 65%;
-    margin-top: 3%;
+.messages {
+    width: 1100px;
+    margin-left: 31.5%;
+    margin-top: 2%;
 }
 
 #date {

@@ -46,9 +46,8 @@ h4 {
 }
 
 .container-fluid {
-    position: relative;
     width: 45%;
-    margin-top: -550px;
+    margin-top: -35%;
     margin-left: 48%;
     font-size: 1.3em;
 }

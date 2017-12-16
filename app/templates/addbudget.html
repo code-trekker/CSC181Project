@@ -5,11 +5,28 @@
 Add Budget
 {% endblock %}
 
+
 {% block styles %}
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link href="/static/mainstyle.css" rel="stylesheet">
     <link href="/static/forms.css" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='buddy.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/jquery-1.12.4.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function() {
+                $("#schoolyear").change(function(){
+                    $("#errors").hide();
+                });
+                 $("#semester").change(function(){
+                    $("#errors").hide();
+                });
+            });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -26,6 +43,7 @@ Add Budget
     <div class="wrapper">
     <div class="form-signin">
         <h3 class="form-signin-heading">Add A Budget</h3>
+        <h6 id="errors" style="font-style: italic; text-align: center; color: red">{{ msgs }}</h6>
     <form class="form form-horizontal" action="{{ url_for('newbudget') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
@@ -35,11 +53,14 @@ Add Budget
         {{ wtf.form_field(form.budgetBal) }}
     </dl>
     <input class="btn btn-success btn-block" type="submit" value="Add">
-    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='/adminbudgets'">
     </form>
 
     </div>
     </div>
     </div>
     {% endwith %}
+
+
+
 {% endblock %}

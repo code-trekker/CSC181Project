@@ -31,21 +31,22 @@ def unauthorized():
 def setup():
     form = AdminSetup()
     check = Organization.query.first()
-    if check is None:
-        if request.method=='POST' and form.validate_on_submit():
+    # if check is None:
+    if request.method=='POST' and form.validate_on_submit():
             db.session.add(User(userid=form.username.data, password=generate_password_hash(form.password.data), orgCode=form.orgCode.data))
             db.session.add(Organization(orgCode=form.orgCode.data, orgName=form.orgName.data, description=form.description.data))
             list = form.courses.data
             print form.courses.data
-            def commaSep(list):
+            if len(list.replace(" ", "")) != 0:
                 new_list = re.split(', |,| ,',list)
                 for data in new_list:
                     db.session.add(Courses(coursename=data))
-            commaSep(list)
+            else:
+                db.session.add(Courses(coursename='N/A'))
             db.session.commit()
             return redirect(url_for('login'))
-    else:
-        return redirect(url_for('viewreg'))
+    # else:
+    #     return redirect(url_for('viewreg'))
     return render_template('setup.html', form=form)
 
 
@@ -61,10 +62,13 @@ def viewreg():
             return redirect(url_for('setup'))
         if request.method == 'POST' and form.validate_on_submit():
             memberid = Member.query.filter_by(memberid=int(form.memberid.data)).first()
+            if len(str(form.memberid.data)) < 8 or len(str(form.memberid.data)) > 8:
+                msgs = "ID format invalid!"
+                return render_template('signup.html', form=form, msgs=msgs, desc=description, name=name)
             if memberid is None:
                 if len(str(form.course.data)) == 0:
                     member = Member(memberid=int(form.memberid.data), fname=form.fname.data, mname=form.mname.data,
-                                    lname=form.lname.data, course='--no course--', orgCode=org.orgCode,
+                                    lname=form.lname.data, course='N/A', orgCode=org.orgCode,
                                     status='ACTIVE', themeid=0)
                     db.session.add(member)
                     db.session.commit()
@@ -97,8 +101,13 @@ def login():
             return render_template('index.html', form=form, name=name)
     return render_template('index.html', form=form, name=name)
 
-@app.route('/logout')
+@app.route('/about')
+def about():
+    name = db.session.query(Organization.orgName).first()
+    org = db.session.query(Organization.orgCode).first()
+    return render_template('aboutpage.html', name=name, org=org)
 
+@app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('viewreg'))
@@ -136,7 +145,7 @@ def newbudget():
 @app.route('/updatebudget', methods=['GET','POST'])
 @login_required #DONE
 def updatebudget():
-    form = NewBudget()
+    form = UpBudget()
     msgs=''
     if request.method=='POST' and form.validate_on_submit():
         check = Budget.query.filter_by(schoolyear=form.schoolyear.data, semester=form.semester.data).first()
@@ -371,14 +380,16 @@ def adminmembers():
 @login_required
 def admincollection():
     now = datetime.datetime.now()
-    query = Collection.query.filter(Collection.schoolyear >= now.year).order_by(Collection.colid) #reference
+    query = Collection.query.filter(Collection.schoolyear >= now.year).order_by(Collection.colid).all()
+    check = db.session.query(Collection.colid, Payments.Payments_colid)
+    # paid = Payments.query.filter_by(Payments_colid=col.colid).count()
     return render_template('collection.html', query=query)
 
 @app.route('/pastcollection')
 @login_required
 def pastcollection():
     now = datetime.datetime.now()
-    query = Collection.query.filter(Collection.schoolyear < now.year).order_by(Collection.schoolyear)  # reference
+    query = Collection.query.filter(Collection.schoolyear < now.year).order_by(Collection.schoolyear)
     return render_template('collection_past.html', query=query)
 
 
@@ -403,7 +414,7 @@ def updatecollection(colid):
         check = Collection.query.filter_by(colid=colid).first()
         if check.colid == colid:
             check.colname = form.colname.data
-            check.fee = form.fee.data
+            # check.fee = form.fee.data
             db.session.commit()
             flash(' Changes saved successfully!')
             return redirect(url_for('admincollection'))
@@ -427,20 +438,24 @@ def adminpayment():
     form = AdminPayment()
     if request.method=="POST" and form.validate_on_submit():
         check = Member.query.filter_by(memberid=form.memberid.data).first()
-        print check
+        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data).first()
         if check is None:
-            print 'xxxx'
-            flash(' Student does not exist!')
-            return render_template('adminpayment.html', form=form)
+            msgs = 'Student does not exist!'
+            return render_template('adminpayment.html', form=form, msgs=msgs)
+        elif payment is not None:
+            msgs = 'Student has already paid!'
+            return render_template('adminpayment.html', form=form, msgs=msgs)
         else:
             query = Collection.query.filter_by(colname=str(form.colname.data)).first()
             now = datetime.datetime.now()
             db.session.add(Payments(Payments_colid=query.colid, Payments_memberid=form.memberid.data,
                                     datepaid=now.strftime("%Y-%m-%d"), Payments_orgCode=current_user.orgCode))
+            increment = Collection.query.filter_by(colid=query.colid).first()
+            increment.amountcollected += increment.fee
             db.session.commit()
-            flash(' Payment saved successfully!')
-            print 'zzzz'
-            return render_template('adminpayment.html', form=form)
+            db.session.commit()
+            msgs='Payment saved successfully!'
+            return render_template('adminpayment.html', form=form, msgs=msgs)
     return render_template('adminpayment.html', form=form)
 
 @app.route('/newpayment/<int:colid>', methods=['GET', 'POST'])
@@ -450,8 +465,12 @@ def newpayment(colid):
     msgs = ''
     if request.method=='POST' and form.validate_on_submit():
         check = Member.query.filter_by(memberid=form.memberid.data).first()
+        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data).first()
         if check is None:
             msgs = 'Student not yet registered!'
+            return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
+        elif payment is not None:
+            msgs = 'Student has already paid!'
             return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
         else:
             db.session.add(Payments(Payments_colid=colid, Payments_memberid=form.memberid.data, datepaid=form.datetime.data, Payments_orgCode=current_user.orgCode))
@@ -494,7 +513,7 @@ def deletepayment(pid):
 @app.route('/adminlogs/')
 @login_required
 def adminlogs():
-    query = Logs.query.filter_by(orgCode=current_user.orgCode)
+    query = Logs.query.filter_by(orgCode=current_user.orgCode).order_by(Logs.i)
     return render_template('logs.html', query=query)
 
 @app.route('/deactivate', methods=['GET', 'POST'])
@@ -528,11 +547,11 @@ def viewerlogin():
         session.pop('user', None)
         check = Member.query.filter_by(memberid=form.memberid.data).first()
         if check is None:
-            flash('This ID is not registered yet!')
+            flash('This studentq         is not registered yet!')
             return render_template('viewlogin.html', form=form, name=name)
         else:
             now = datetime.datetime.now()
-            addis = Logs(idno=check.memberid, fname=check.fname, lname=check.lname, dnt=now.strftime("%Y-%m-%d %H:%M"), orgCode=check.orgCode)
+            addis = Logs(idno=check.memberid, fname=check.fname, lname=check.lname, dnt=now.strftime("%Y-%m-%d %H:%M %p"), orgCode=check.orgCode)
             db.session.add(addis)
             db.session.commit()
             session['user'] = check.fname
@@ -598,7 +617,12 @@ def viewlogout():
     session.pop('org', None)
     return redirect(url_for('viewerlogin'))
 
-
+@app.route('/unpaid/<int:colid>')
+@login_required
+def unpaid(colid):
+    result = db.engine.execute("select * from member where member.status = 'ACTIVE' and memberid not in (Select payments.Payments_memberid from payments where payments.Payments_colid = %s );" %(colid))
+    collectname = Collection.query.filter_by(colid=colid).first()
+    return render_template('notpaid.html', result = result, collectname=collectname )
 
 if __name__ == '__main__':
     app.run(debug=True)

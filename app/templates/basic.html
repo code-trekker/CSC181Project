@@ -69,12 +69,13 @@ var hexColor = document.getElementById('hex-color');
 
 function hexClock() {
   var time = new Date();
-  var hours = (time.getHours() % 12).toString();
+  var hours = (time.getHours()).toString();
   var minutes = time.getMinutes().toString();
   var seconds = time.getSeconds().toString();
   var meridiem = "AM";
   if (parseInt(hours) > 12) {
-        meridiem = "PM";
+      hours = (hours % 12);
+      meridiem = "PM";
   }
 
   if (hours === 0) {

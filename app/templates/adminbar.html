@@ -9,14 +9,6 @@
    <li><a href="/adminlogs"><span><i class="glyphicon glyphicon-folder-close" style="margin-right:0.5em"></i>Logs</span></a></li>
    <li><a href="/logout"><span><i class="glyphicon glyphicon-log-out" style="margin-right:0.5em"></i>Logout</span></a></li>
 </ul>
+
 </div>
 
-{% block scripts %}
-    <script src="/static/jquery-1.12.4.js" type="text/javascript"></script>
-    <script src="/static/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-            } );
-    </script>
-{% endblock %}

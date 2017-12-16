@@ -14,6 +14,7 @@ New Payment
 {% endblock %}
 
 {% block content %}
+    {% include "adminbar.html" %}
 <ol class="breadcrumb" id="form-breadcrumbs">
     <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
     <li class="breadcrumb-item">New Payment</li>
@@ -38,6 +39,7 @@ New Payment
         <div class="wrapper">
             <div class="form-signin" style="margin-top: 10%">
         <h3 class="form-signin-heading">Quick Payment</h3>
+                <h6 style="font-style: italic; text-align: center">{{ msgs }}</h6>
     <form class="form form-horizontal" action="{{ url_for('adminpayment') }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}

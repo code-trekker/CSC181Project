@@ -31,7 +31,7 @@
         {{ form.hidden_tag() }}
         {{ form.csrf_token }}
         {{ wtf.form_field(form.colname, placeholder="Enter new name") }}
-        {{ wtf.form_field(form.fee, placeholder="Enter new amount") }}
+{#        {{ wtf.form_field(form.fee, placeholder="Enter new amount") }}#}
     </dl>
     <input class="btn btn-success btn-block" type="submit" value="Update">
     <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">

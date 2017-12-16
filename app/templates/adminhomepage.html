@@ -21,11 +21,53 @@ Admin Home
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        var clock = document.getElementById('clock');
+var hexColor = document.getElementById('hex-color');
 
+function hexClock() {
+  var time = new Date();
+  var hours = (time.getHours()).toString();
+  var minutes = time.getMinutes().toString();
+  var seconds = time.getSeconds().toString();
+  var meridiem = "AM";
+  if (parseInt(hours) > 12) {
+      hours = (hours % 12);
+      meridiem = "PM";
+  }
+
+  if (hours === 0) {
+        hours = 12;
+  }
+
+  if (hours.length < 2) {
+    hours = '0' + hours;
+  }
+
+  if (minutes.length < 2) {
+    minutes = '0' + minutes;
+  }
+
+  if (seconds.length < 2) {
+    seconds = '0' + seconds;
+  }
+
+  var clockStr = hours + ' : ' + minutes + ' : ' + seconds + " " + meridiem;
+  var hexColorStr = '#' + hours + minutes + seconds;
+
+  clock.textContent = clockStr;
+  hexColor.textContent = hexColorStr;
+  document.body.style.backgroundColor = hexColorStr;
+}
+
+hexClock();
+setInterval(hexClock, 1000);
+    </script>
 {% endblock %}
 
 {% block content %}
 {% include "adminbar.html" %}
+
 <div class="col-md-12" id="adminbuttons">
     <h1 style="font-family: sans-serif; text-align: center; text-shadow: 3px 3px 5px #727272;" id="adminmsg">{{ msgs }}<br>Welcome to the admin homepage!</h1>
     <div id="quickbois">
@@ -36,7 +78,10 @@ Admin Home
         <a id="add-collection" class="btn btn-primary" href="/newcollection"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i><br>Add a collection</span></a>
         <a id="deactivate-students" class="btn btn-primary" href="/deactivate"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i><br>Deactivate students</span></a>
     </div>
-
+<div id="clocks" style="margin-top: -540px">
+    <h1 id="clock"></h1>
+    <p id="hex-color" style="display: none;"></p>
+    </div>
 
 
 
