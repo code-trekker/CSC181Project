@@ -6,6 +6,7 @@ New Payment
 {% endblock %}
 
 {% block styles %}
+    <link href="/static/bootstrap1.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link href="/static/mainstyle.css" rel="stylesheet">
     <link href="/static/forms.css" rel="stylesheet">
@@ -48,7 +49,7 @@ New Payment
         {{ wtf.form_field(form.datetime) }}
     </dl>
     <input class="btn btn-success btn-block" type="submit" value="Confirm">
-    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='/admincollection'">
     </form>
 
     </div>

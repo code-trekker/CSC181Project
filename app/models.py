@@ -1,3 +1,5 @@
+import datetime
+
 from controller import *
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects import mysql
@@ -88,7 +90,7 @@ class Collection(db.Model):
     fee = db.Column(db.DECIMAL(10, 2), nullable=False)
     amountcollected = db.Column(db.DECIMAL(10,2), nullable=False)
     Collection_orgCode=db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
-    schoolyear = db.Column(db.CHAR(4), nullable=False)
+    schoolyear = db.Column(db.CHAR(23), nullable=False)
     pays = db.relationship('Payments', backref='collection', lazy=True)
 
     def __init__(self, colname, fee, amountcollected, Collection_orgCode, schoolyear):
@@ -97,6 +99,7 @@ class Collection(db.Model):
         self.amountcollected = amountcollected
         self.Collection_orgCode=Collection_orgCode
         self.schoolyear=schoolyear
+
 
     def __repr__(self):
         return "%s" % (self.colname)
@@ -139,7 +142,7 @@ class Event(db.Model):
     eventDate = db.Column(db.CHAR(10), nullable=False)
     allocation = db.Column(db.DECIMAL(10,2), nullable=False)
     Event_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
-    schoolyear = db.Column(db.CHAR(4), nullable=False)
+    schoolyear = db.Column(db.CHAR(10), nullable=False)
     expense = db.relationship('Expenses',cascade='all,delete-orphan', backref=db.backref('expenses', cascade="all"), lazy=True, single_parent=True)
     attendance = db.relationship('Attendance', backref='event', lazy=True)
 
@@ -159,16 +162,18 @@ class Expenses(db.Model):
     name = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.DECIMAL(10,2), nullable=False)
     date = db.Column(db.CHAR(10), nullable=False)
+    schoolyear = db.Column(db.CHAR(10), nullable=False)
     orNo = db.Column(db.String(30), nullable=False)
     Expenses_orgCode = db.Column(db.String(10), db.ForeignKey('organization.orgCode'), nullable=False)
 
-    def __init__(self, amount, date, orNo, name, Expenses_eventid, Expenses_orgCode ):
+    def __init__(self, amount, date, orNo, name, Expenses_eventid, Expenses_orgCode,schoolyear ):
         self.amount = amount
         self.date = date
         self.orNo = orNo
         self.name = name
         self.Expenses_eventid = Expenses_eventid
         self.Expenses_orgCode = Expenses_orgCode
+        self.schoolyear=schoolyear
 
     def __repr__(self):
         return '<Expenses %r>' % self.Expenses_orgCode

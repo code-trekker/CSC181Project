@@ -6,6 +6,7 @@ Update Budget
 {% endblock %}
 
 {% block styles %}
+    <link href="/static/bootstrap1.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link href="/static/mainstyle.css" rel="stylesheet">
     <link href="/static/forms.css" rel="stylesheet">
@@ -26,6 +27,7 @@ Update Budget
     <div class="wrapper">
     <div class="form-signin">
         <h3 class="form-signin-heading">Update A Budget</h3>
+        <h6 id="errors" style="font-style: italic; text-align: center; color: red">{{ msgs }}</h6>
     <form class="form form-horizontal" action="{{ url_for('updatebudget')}}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}

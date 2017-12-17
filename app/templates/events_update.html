@@ -6,6 +6,7 @@ Update Event
 {% endblock %}
 
 {% block styles %}
+    <link href="/static/bootstrap1.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/mainstyle.css">
     <link href="/static/forms.css" rel="stylesheet">
@@ -24,8 +25,8 @@ Update Event
 
     <div class="container">
     <div class="wrapper">
-    <div class="form-signin">
-        <h3 class="form-signin-heading">Update Record Info</h3>
+    <div class="form-signin" style="margin-top: 2%">
+        <h3 class="form-signin-heading">Update Event Info</h3>
     <form class="form form-horizontal" action="{{ url_for('updateevent', eventid=eventid) }}" method="POST" role="form">
     <dl>
         {{ form.hidden_tag() }}
@@ -35,7 +36,7 @@ Update Event
         {{ wtf.form_field(form.allocation, placeholder="Enter new budget allocation") }}
     </dl>
     <input class="btn btn-success btn-block" type="submit" value="Update">
-    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='javascript:history.back()'">
+    <input class="btn btn-primary btn-block" type="button" value="Back" onclick="window.location.href='/adminevents'">
     </form>
 
     </div>

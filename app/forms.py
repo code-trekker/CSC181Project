@@ -89,13 +89,12 @@ class DelExpense(FlaskForm):
     expid = IntegerField('ID', validators=[InputRequired(), Length(min=4, max=4, message='Invalid ID')])
 
 class NewCollection(FlaskForm):
-    #type = SelectField(u'Type', choices=[('assessment', 'Assessment'), ('tshirt', 'T-shirt'), ('lanyard', 'Lanyard'), ('others', 'Others')])
     colname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
     fee = DecimalField('Set Amount', validators=[InputRequired()])
 
 class UpCollection(FlaskForm):
     colname = StringField('Collection Name', validators=[InputRequired(), Length(min=3, max=20, message="Input must be between 5-20 characters")])
-    # fee = DecimalField('Set Amount', validators=[InputRequired()], default=0)
+
 
 class NewPayment(FlaskForm):
     memberid = IntegerField('Student ID', validators=[InputRequired()])
@@ -106,12 +105,12 @@ class NewAttendance(FlaskForm):
     attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
 
 class AdminPayment(FlaskForm):
-    colname = QuerySelectField('Collections',query_factory=lambda: Collection.query,allow_blank=False)
+    colname = QuerySelectField('Collections',query_factory=lambda: Collection.query.filter(Collection.schoolyear >= datetime.datetime.now().year),allow_blank=False)
     memberid = IntegerField('Student ID', validators=[InputRequired()])
     datetime = DateField('Date Paid', format='%Y-%m-%d')
 
 class AdminAttendance(FlaskForm):
-    ev_name = QuerySelectField('Events',query_factory=lambda: Event.query,allow_blank=False)
+    ev_name = QuerySelectField('Events',query_factory=lambda: Event.query.filter(Event.schoolyear >= datetime.datetime.now().year),allow_blank=False)
     memberid = IntegerField('Student ID', validators=[InputRequired()])
     attendtype = SelectField(u'Attendance Type', choices=[('IN', 'Sign In'), ('OUT', 'Sign Out')])
 

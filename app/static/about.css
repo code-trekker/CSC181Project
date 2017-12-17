@@ -21,7 +21,8 @@ body {
 .container-fluid {
     width: 90%;
     font-size: 1em;
-    margin-bottom: 1%;
+    margin-bottom: 2%;
+
 }
 
 .panel-transparent {
@@ -30,9 +31,10 @@ body {
 }
 .panel-body {
     color: white;
-    padding: 30px 50px 50px 50px;
+    padding: 30px 30px 30px 30px;
     border-radius: 20px;
     border:none;
+    height: 1070px;
 }
 
 
@@ -48,7 +50,7 @@ p {
 }
 
 .row {
-    padding: 50px 50px 50px 50px;
+    padding: 40px 40px 40px 40px;
 }
 
 .wrapper label.control-label{
@@ -68,3 +70,4 @@ a.navbar-brand {
 .navbar-nav {
     margin-left: 72%;
 }
+

@@ -1,6 +1,8 @@
+import calendar
+
 from flask_sqlalchemy import Pagination
 import re
-from sqlalchemy import join
+from sqlalchemy import join, func
 from werkzeug.exceptions import abort
 from datetime import timedelta
 from controller import *
@@ -156,6 +158,7 @@ def updatebudget():
             if check.semester == form.semester.data:
                 check.budgetBal = form.budgetBal.data
                 db.session.commit()
+                flash(' Updated record successfully!')
                 return redirect(url_for('adminbudgets'))
     return render_template('updatebudget.html', form=form, msgs=msgs)
 
@@ -163,29 +166,54 @@ def updatebudget():
 @login_required
 def adminevents():
     now = datetime.datetime.now()
-    query = Event.query.filter(Event.schoolyear >= now.year).order_by(Event.eventDate)
-    return render_template('events.html', query=query)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear >= schoolyear).order_by(Event.eventDate)
+        return render_template('events.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = Event.query.filter(Event.schoolyear >= schoolyear).order_by(Event.eventDate)
+        return render_template('events.html', query=query)
 
 @app.route('/pastevents', methods=['GET', 'POST'])
 @login_required
 def pastevents():
     now = datetime.datetime.now()
-    query = Event.query.filter(Event.schoolyear < now.year).order_by(Event.eventDate)
-    link1 = '/adminhome'
-    link2 = '/adminevents'
-    return render_template('events_past.html', query=query, link1=link1, link2=link2)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear < schoolyear).order_by(Event.eventDate)
+        link1 = '/adminhome'
+        link2 = '/adminevents'
+        return render_template('events_past.html', query=query, link1=link1, link2=link2)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = Event.query.filter(Event.schoolyear < schoolyear).order_by(Event.eventDate)
+        link1 = '/adminhome'
+        link2 = '/adminevents'
+        return render_template('events_past.html', query=query, link1=link1, link2=link2)
 
 @app.route('/newevent', methods=['GET','POST']) #DONE
 @login_required
 def newevent():
     form = NewEvent()
     now = datetime.datetime.now()
-    if request.method=='POST' and form.validate_on_submit():
-        db.session.add(Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data,
-                             Event_orgCode=current_user.orgCode, schoolyear=now.year))
-        db.session.commit()
-        flash(" Success! You have added a new event!")
-        return redirect(url_for('adminevents'))
+    if now.month >= 8:
+        schoolyear = str(now.year)+'-'+str(now.year+1)
+        if request.method=='POST' and form.validate_on_submit():
+            db.session.add(Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data,
+                             Event_orgCode=current_user.orgCode, schoolyear=schoolyear))
+            db.session.commit()
+            flash(" Success! You have added a new event!")
+            return redirect(url_for('adminevents'))
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        if request.method == 'POST' and form.validate_on_submit():
+            db.session.add(
+                Event(eventName=form.eventName.data, eventDate=form.eventDate.data, allocation=form.allocation.data,
+                      Event_orgCode=current_user.orgCode, schoolyear=schoolyear))
+            db.session.commit()
+            flash(" Success! You have added a new event!")
+            return redirect(url_for('adminevents'))
     return render_template('events_new.html', form=form)
 
 @app.route('/updateevent/<int:eventid>', methods=['GET', 'POST'])
@@ -223,39 +251,40 @@ def deleteevent(eventid):
 @login_required
 def adminattendance():
     form = AdminAttendance()
+    msgs = ''
     if request.method=='POST' and form.validate_on_submit():
         now=datetime.datetime.now()
         query =Event.query.filter_by(eventName=str(form.ev_name.data)).first()
         check = Attendance.query.filter_by(memberid=form.memberid.data, eventid=query.eventid).first()
         member = Member.query.filter_by(memberid=form.memberid.data).first()
         if member is None:
-            flash(' Student does not exist!')
-            return render_template('adminattendance.html', form=form)
+            msgs = 'Student does not exist!'
+            return render_template('adminattendance.html', form=form, msgs=msgs)
         if check is None:
             if form.attendtype.data == 'IN':
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=query.eventid, date=now.strftime("%Y-%m-%d %H:%M"),
                                           signin=form.attendtype.data, signout=None))
                 db.session.commit()
-                flash(' Student recorded successfully!')
-                return render_template('adminattendance.html',form=form)
+                msgs='Student recorded successfully!'
+                return render_template('adminattendance.html',form=form, msgs=msgs)
             if form.attendtype.data == 'OUT':
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=query.eventid, date=now.strftime("%Y-%m-%d %H:%M"), signin=None,
                                           signout=form.attendtype.data))
                 db.session.commit()
-                flash(' Student recorded successfully!')
-                return render_template('attendance_new.html',form=form)
+                msgs='Student recorded successfully!'
+                return render_template('attendance_new.html',form=form, msgs=msgs)
         elif check.memberid == form.memberid.data and check.eventid == query.eventid:
             if form.attendtype.data == 'IN':
                 check.signin = form.attendtype.data
                 db.session.commit()
-                flash(' Student recorded successfully!')
-                return render_template('adminattendance.html',form=form)
+                msgs='Student recorded successfully!'
+                return render_template('adminattendance.html',form=form, msgs=msgs)
             if form.attendtype.data == 'OUT':
                 check.signout = form.attendtype.data
                 db.session.commit()
-                flash(' Student recorded successfully!')
-                return render_template('adminattendance.html',form=form)
-    return render_template('adminattendance.html', form=form)
+                msgs='Student recorded successfully!'
+                return render_template('adminattendance.html',form=form, msgs=msgs)
+    return render_template('adminattendance.html', form=form, msgs=msgs)
 
 
 @app.route('/newattendance/<int:eventid>/<eventdate>', methods=['GET', 'POST'])
@@ -273,23 +302,23 @@ def newattendance(eventid, eventdate):
             if form.attendtype.data=='IN':
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=eventid, date=eventdate, signin=form.attendtype.data, signout=None))
                 db.session.commit()
-                flash(' Student recorded successfully!')
+                msgs='Student recorded successfully!'
                 return redirect(url_for('newattendance', eventid=eventid, eventdate=eventdate))
             if form.attendtype.data=='OUT':
                 db.session.add(Attendance(memberid=form.memberid.data, eventid=eventid, date=eventdate, signin=None, signout=form.attendtype.data))
                 db.session.commit()
-                flash(' Student recorded successfully!')
+                msgs = 'Student recorded successfully!'
                 return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
         elif check.memberid == form.memberid.data and check.eventid==eventid:
             if form.attendtype.data == 'IN':
                 check.signin = form.attendtype.data
                 db.session.commit()
-                flash(' Student recorded successfully!')
+                msgs = 'Student recorded successfully!'
                 return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
             if form.attendtype.data == 'OUT':
                 check.signout = form.attendtype.data
                 db.session.commit()
-                flash(' Student recorded successfully!')
+                msgs = 'Student recorded successfully!'
                 return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
     return render_template('attendance_new.html', eventid=eventid, form=form, eventdate=eventdate, msgs=msgs)
 
@@ -313,31 +342,58 @@ def pastattendance(eventid):
 @login_required
 def adminexpenses():
     now = datetime.datetime.now()
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter(Event.schoolyear >= now.year)
-    return render_template('expenses.html', query=query)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo, Event.eventName).outerjoin(Event).filter(Event.schoolyear >= schoolyear)
+        return render_template('expenses.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                                 Event.eventName).outerjoin(Event).filter(Event.schoolyear >= schoolyear)
+        return render_template('expenses.html', query=query)
 
 @app.route('/pastexpenses')
 @login_required
 def pastexpenses():
     now = datetime.datetime.now()
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
-                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < now.year)
-    link1 = '/adminhome'
-    link2 = '/adminexpenses'
-    return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < schoolyear)
+        link1 = '/adminhome'
+        link2 = '/adminexpenses'
+        return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
+    elif now.month <=7:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                                 Event.eventName).outerjoin(Event).filter(Event.schoolyear < schoolyear)
+        link1 = '/adminhome'
+        link2 = '/adminexpenses'
+        return render_template('expenses_past.html', query=query, link1=link1, link2=link2)
 
 @app.route('/newexpense', methods=['GET', 'POST'])
 @login_required
 def newexpense():
     form = NewExpense(Expenses_orgCode=current_user.orgCode)
+    now = datetime.datetime.now()
     query = Event.query.filter_by(eventName=str(form.eid.data)).first()
     msgs=''
-    if request.method=='POST' and form.validate_on_submit():
-        db.session.add(Expenses(Expenses_eventid=query.eventid, amount=form.amount.data, date=form.date.data,
-                                    orNo=form.orNo.data, name=form.name.data, Expenses_orgCode=current_user.orgCode))
-        db.session.commit()
-        flash(' Record successfully added!')
-        return redirect(url_for('adminexpenses'))
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        if request.method=='POST' and form.validate_on_submit():
+            db.session.add(Expenses(Expenses_eventid=query.eventid, amount=form.amount.data, date=form.date.data,
+                                    orNo=form.orNo.data, name=form.name.data, Expenses_orgCode=current_user.orgCode, schoolyear=schoolyear))
+            db.session.commit()
+            flash(' Record successfully added!')
+            return redirect(url_for('adminexpenses'))
+    elif now.month <=7:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        if request.method=='POST' and form.validate_on_submit():
+            db.session.add(Expenses(Expenses_eventid=query.eventid, amount=form.amount.data, date=form.date.data,
+                                    orNo=form.orNo.data, name=form.name.data, Expenses_orgCode=current_user.orgCode, schoolyear=schoolyear))
+            db.session.commit()
+            flash(' Record successfully added!')
+            return redirect(url_for('adminexpenses'))
     return render_template('expenses_new.html', form=form, msgs=msgs)
 
 @app.route('/updateexpense/<int:expid>', methods=['GET', 'POST'])
@@ -380,17 +436,29 @@ def adminmembers():
 @login_required
 def admincollection():
     now = datetime.datetime.now()
-    query = Collection.query.filter(Collection.schoolyear >= now.year).order_by(Collection.colid).all()
-    check = db.session.query(Collection.colid, Payments.Payments_colid)
-    # paid = Payments.query.filter_by(Payments_colid=col.colid).count()
-    return render_template('collection.html', query=query)
+    if now.month >= 8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Collection.query.filter(Collection.schoolyear >= schoolyear).order_by(Collection.colid).all()
+        check = db.session.query(Collection.colid, Payments.Payments_colid)
+        return render_template('collection.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = Collection.query.filter(Collection.schoolyear >= schoolyear).order_by(Collection.colid).all()
+        check = db.session.query(Collection.colid, Payments.Payments_colid)
+        return render_template('collection.html', query=query)
 
 @app.route('/pastcollection')
 @login_required
 def pastcollection():
     now = datetime.datetime.now()
-    query = Collection.query.filter(Collection.schoolyear < now.year).order_by(Collection.schoolyear)
-    return render_template('collection_past.html', query=query)
+    if now.month >= 8:
+        schoolyear = str(now.year) +  '-' + str(now.year + 1)
+        query = Collection.query.filter(Collection.schoolyear < schoolyear).order_by(Collection.schoolyear)
+        return render_template('collection_past.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = Collection.query.filter(Collection.schoolyear < schoolyear).order_by(Collection.schoolyear)
+        return render_template('collection_past.html', query=query)
 
 
 @app.route('/newcollection', methods=['GET', 'POST'])
@@ -398,11 +466,20 @@ def pastcollection():
 def newcollection():
     form = NewCollection()
     now = datetime.datetime.now()
-    if request.method == 'POST' and form.validate_on_submit():
-        db.session.add(Collection(colname=form.colname.data, fee = form.fee.data, Collection_orgCode=current_user.orgCode, schoolyear=now.year, amountcollected=0))
-        db.session.commit()
-        flash(' Collection added successfully!')
-        return redirect(url_for('admincollection'))
+    if now.month >= 8:
+        schoolyear = str(now.year)+'-'+str(now.year+1)
+        if request.method == 'POST' and form.validate_on_submit():
+            db.session.add(Collection(colname=form.colname.data, fee = form.fee.data, Collection_orgCode=current_user.orgCode, schoolyear=schoolyear, amountcollected=0))
+            db.session.commit()
+            flash(' Collection added successfully!')
+            return redirect(url_for('admincollection'))
+    elif now.month <=7:
+        schoolyear = str(now.year-1)+'-'+str(now.year)
+        if request.method == 'POST' and form.validate_on_submit():
+            db.session.add(Collection(colname=form.colname.data, fee = form.fee.data, Collection_orgCode=current_user.orgCode, schoolyear=schoolyear, amountcollected=0))
+            db.session.commit()
+            flash(' Collection added successfully!')
+            return redirect(url_for('admincollection'))
     return render_template('collection_new.html', form=form)
 
 @app.route('/updatecollection/<int:colid>', methods=['GET', 'POST'])
@@ -438,7 +515,8 @@ def adminpayment():
     form = AdminPayment()
     if request.method=="POST" and form.validate_on_submit():
         check = Member.query.filter_by(memberid=form.memberid.data).first()
-        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data).first()
+        colid = Collection.query.filter_by(colname = form.colname.data).first()
+        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data, Payments_colid=colid.colid).first()
         if check is None:
             msgs = 'Student does not exist!'
             return render_template('adminpayment.html', form=form, msgs=msgs)
@@ -465,7 +543,7 @@ def newpayment(colid):
     msgs = ''
     if request.method=='POST' and form.validate_on_submit():
         check = Member.query.filter_by(memberid=form.memberid.data).first()
-        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data).first()
+        payment = Payments.query.filter_by(Payments_memberid=form.memberid.data, Payments_colid=colid).first()
         if check is None:
             msgs = 'Student not yet registered!'
             return render_template('payment_new.html', form=form, colid=colid, msgs=msgs)
@@ -513,8 +591,15 @@ def deletepayment(pid):
 @app.route('/adminlogs/')
 @login_required
 def adminlogs():
-    query = Logs.query.filter_by(orgCode=current_user.orgCode).order_by(Logs.i)
-    return render_template('logs.html', query=query)
+    now = datetime.datetime.now()
+    if now.month >=8:
+        schoolyear = str(now.year) + '-08' + '-01' + ' 12:00 AM'
+        query = Logs.query.filter(Logs.dnt >= schoolyear).order_by(Logs.i)
+        return render_template('logs.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-07' + '-30' + ' 12:00 AM'
+        query = Logs.query.filter(Logs.dnt <= schoolyear).order_by(Logs.i)
+        return render_template('logs.html', query=query)
 
 @app.route('/deactivate', methods=['GET', 'POST'])
 @login_required
@@ -547,7 +632,7 @@ def viewerlogin():
         session.pop('user', None)
         check = Member.query.filter_by(memberid=form.memberid.data).first()
         if check is None:
-            flash('This studentq         is not registered yet!')
+            flash('This student is not registered yet!')
             return render_template('viewlogin.html', form=form, name=name)
         else:
             now = datetime.datetime.now()
@@ -577,7 +662,7 @@ def viewhome():
         return render_template("viewerhomepage.html")
     else:
         flash('Log in again to access this page')
-        return render_template('viewlogin.html', form=form)
+        return redirect(url_for('viewerlogin'))
 
 @app.route('/viewbudgets', methods=['GET', 'POST'])
 def viewbudgets():
@@ -587,28 +672,54 @@ def viewbudgets():
 @app.route('/viewexpenses', methods=['GET', 'POST'])
 def viewexpenses():
     now = datetime.datetime.now()
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
-                             Event.eventName).outerjoin(Event).filter(Event.schoolyear >= now.year)
-    return render_template('viewer_expenses.html', query=query)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear >= schoolyear)
+        return render_template('viewer_expenses.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                                 Event.eventName).outerjoin(Event).filter(Event.schoolyear >= schoolyear)
+        return render_template('viewer_expenses.html', query=query)
 
 @app.route('/viewpastexpenses', methods=['GET','POST'])
 def viewpastexpenses():
     now = datetime.datetime.now()
-    query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
-                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < now.year)
-    return render_template('viewer_expenses_past.html', query=query)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                             Event.eventName).outerjoin(Event).filter(Event.schoolyear < schoolyear)
+        return render_template('viewer_expenses_past.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        query = db.session.query(Expenses.expid, Expenses.name, Expenses.amount, Expenses.date, Expenses.orNo,
+                                 Event.eventName).outerjoin(Event).filter(Event.schoolyear < schoolyear)
+        return render_template('viewer_expenses_past.html', query=query)
 
 @app.route('/viewevent', methods=['GET','POST'])
 def viewevents():
     now = datetime.datetime.now()
-    query = Event.query.filter(Event.schoolyear >= now.year).order_by(Event.eventDate)
-    return render_template('viewer_events.html', query=query)
+    if now.month >=8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear >= schoolyear).order_by(Event.eventDate)
+        return render_template('viewer_events.html', query=query)
+    elif now.month <=7:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear >= schoolyear).order_by(Event.eventDate)
+        return render_template('viewer_events.html', query=query)
 
 @app.route('/viewpastevent', methods=['GET','POST'])
 def viewpastevent():
     now = datetime.datetime.now()
-    query = Event.query.filter(Event.schoolyear < now.year).order_by(Event.eventDate)
-    return render_template('viewer_events_past.html', query=query)
+    if now.month >= 8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear < schoolyear).order_by(Event.eventDate)
+        return render_template('viewer_events_past.html', query=query)
+    elif now.month <= 7:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        query = Event.query.filter(Event.schoolyear < schoolyear).order_by(Event.eventDate)
+        return render_template('viewer_events_past.html', query=query)
 
 
 @app.route('/viewlogout', methods=['GET', 'POST'])
@@ -623,6 +734,40 @@ def unpaid(colid):
     result = db.engine.execute("select * from member where member.status = 'ACTIVE' and memberid not in (Select payments.Payments_memberid from payments where payments.Payments_colid = %s );" %(colid))
     collectname = Collection.query.filter_by(colid=colid).first()
     return render_template('notpaid.html', result = result, collectname=collectname )
+
+@app.route('/summary')
+@login_required
+def summary():
+    now = datetime.date.today()
+    if now.month >= 8:
+        schoolyear = str(now.year) + '-' + str(now.year + 1)
+        qry = db.session.query(func.sum(Collection.amountcollected)).filter(Collection.schoolyear == schoolyear)
+        qry1 = db.session.query(func.sum(Expenses.amount)).filter(Expenses.schoolyear == schoolyear)
+        collected = []
+        spent = []
+        for tot in qry:
+            result = str(tot).strip("Decimal,()'")
+            collected.append(result)
+
+        for tot in qry1:
+            result = str(tot).strip("Decimal,()'")
+            spent.append(result)
+        return render_template('summary.html', collected=collected, spent=spent)
+    elif now.month <=7:
+        schoolyear = str(now.year-1) + '-' + str(now.year)
+        qry = db.session.query(func.sum(Collection.amountcollected)).filter(Collection.schoolyear == schoolyear)
+        qry1 = db.session.query(func.sum(Expenses.amount)).filter(Expenses.schoolyear == schoolyear)
+        collected = []
+        spent = []
+        for tot in qry:
+            result = str(tot).strip("Decimal,()'")
+            collected.append(result)
+
+        for tot in qry1:
+            result = str(tot).strip("Decimal,()'")
+            spent.append(result)
+        return render_template('summary.html', collected=collected, spent=spent)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

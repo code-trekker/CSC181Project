@@ -23,9 +23,9 @@ Login
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">EZ Buddy</a>
+          <a class="navbar-brand" href="/">{{ org }}</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" class="navbar-collapse collapse" style="margin-left: -3%">
           <ul class="nav navbar-nav">
             <li><a href="/about">About</a></li>
             <li><a href="/viewerlogin">Login</a></li>
@@ -54,7 +54,7 @@ Login
                     {{ wtf.form_field(form.password) }}
                 </dl>
                     <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
-                <a class="register" href="/viewerlogin">Not an admin? Click here</a>
+                <a class="register" href="/viewerlogin" style="position: relative; top: 10px;">Not an admin? Click here</a>
 		</form>
 	</div>
 </div>

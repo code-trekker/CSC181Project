@@ -66,25 +66,27 @@ setInterval(hexClock, 1000);
 {% endblock %}
 
 {% block content %}
-{% include "adminbar.html" %}
+    {% include "adminbar.html" %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/adminhome">Home</a></li>
+    <li class="breadcrumb-item">Summary</li>
+</ol>
 
-<div class="col-md-12" id="adminbuttons">
-    <h1 style="font-family: sans-serif; text-align: center; text-shadow: 3px 3px 5px #727272;" id="adminmsg">{{ msgs }}<br>Welcome to the admin homepage!</h1>
-    <div id="quickbois">
-        <a id="make-payment" class="btn btn-primary" href="/adminpayment"><span><i class="glyphicon glyphicon-piggy-bank" style="margin-right:0.5em"></i><br>Make a payment</span></a>
-        <a id="add-event" class="btn btn-primary" href="/newevent"><span><i class="glyphicon glyphicon-calendar" style="margin-right:0.5em"></i><br>Add an event</span></a>
-        <a id="add-expense" class="btn btn-primary" href="/newexpense"><span><i class="glyphicon glyphicon-tags" style="margin-right:0.5em"></i><br>Record an expense</span></a>
-        <a id="new-attendance" class="btn btn-primary" href="/adminattendance"><span><i class="glyphicon glyphicon-calendar" style="margin-right:0.5em"></i><br>Attendance</span></a>
-        <a id="add-collection" class="btn btn-primary" href="/newcollection"><span><i class="glyphicon glyphicon-usd" style="margin-right:0.5em"></i><br>Add a collection</span></a>
-        <a id="deactivate-students" class="btn btn-primary" href="/deactivate"><span><i class="glyphicon glyphicon-user" style="margin-right:0.5em"></i><br>Deactivate students</span></a>
-        <a id="summary" class="btn btn-primary" href="/summary"><span><i class="glyphicon glyphicon-bookmark" style="margin-right:0.5em"></i><br>Summary</span></a>
-    </div>
-<div id="clocks" style="margin-top: -600px">
+
+    <div id="clocks" style="margin-top: 50px">
     <h1 id="clock"></h1>
     <p id="hex-color" style="display: none;"></p>
     </div>
 
+<div class="col-md-12" id="adminbuttons" style="margin-left: 32.2%;margin-top: 7%; width: 560px; height: 370px">
+{% for exp in spent %}
+    <h2 style="margin-top: 70px">Total Expenses: &nbsp;&nbsp;&nbsp;&nbsp;&#8369;{{ exp }}<br><small>(School Year Total)</small></h2>
+{% endfor %}
+{% for col in collected %}
+<h2 style="margin-top: 90px">Total Collections: &nbsp;&#8369;{{ col }}<br><small>(School Year Total)</small></h2>
+{% endfor %}
+
+</div>
 
 
 {% endblock %}
-
